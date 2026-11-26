@@ -68,15 +68,24 @@ const es = {
   "press.eyebrow": "// ARCHIVO",
   "press.intro":
     "Desde 2015 la comunidad ha aparecido en medios regionales y nacionales. Este es un archivo de algunas de esas conversaciones.",
-  "notFound.title": "404 · PÁGINA NO ENCONTRADA",
+  "notFound.title": "404 · NI CON MAPA PIRATA",
   "notFound.description":
-    "La página que buscas no existe o cambió de dirección.",
+    "Seguimos las pistas hasta Guayacán, pero esta página no apareció.",
   "notFound.eyebrow": "// ERROR 404",
   "notFound.intro":
-    "Parece que este pixel no está en el mapa. La página que buscas no existe, cambió de dirección o se perdió en la nebulosa.",
+    "Seguimos las pistas hasta Guayacán, pero esta página no apareció. Puede que el tesoro esté en otra URL o que los piratas se hayan llevado el archivo.",
   "notFound.outroLead":
     "Vuelve al inicio o revisa los próximos meetups. Si crees que es un error, escríbenos a",
-  "notFound.codeStatus": "perdido-en-el-espacio",
+  "notFound.cta": "volver a tierra firme",
+  "notFound.mapLabel": "// CARTA DE NAVEGACIÓN",
+  "notFound.mapRegion": "GUAYACÁN / IV REGIÓN",
+  "notFound.mapCoast": "COSTA DE COQUIMBO",
+  "notFound.mapTreasure": "ACÁ NO HAY TESORO",
+  "notFound.mapNote": "sólo una ruta rota",
+  "notFound.mapScale": "ESCALA 1:404",
+  "notFound.mapLat": "LAT: NO ENCONTRADA",
+  "notFound.mapLong": "LONG: NI CON MAPA",
+  "notFound.mapWest": "O",
 } as const;
 
 export type UIKey = keyof typeof es;
@@ -147,14 +156,23 @@ export const ui = {
     "press.eyebrow": "// ARCHIVE",
     "press.intro":
       "Since 2015 the community has appeared in regional and national media. This is an archive of some of those conversations.",
-    "notFound.title": "404 · PAGE NOT FOUND",
+    "notFound.title": "404 · NOT EVEN WITH A PIRATE MAP",
     "notFound.description":
-      "The page you are looking for does not exist or has moved.",
+      "We followed the trail to Guayacán, but this page never showed up.",
     "notFound.eyebrow": "// ERROR 404",
     "notFound.intro":
-      "Looks like this pixel isn't on the map. The page you are looking for doesn't exist, has moved, or got lost in the nebula.",
+      "We followed the trail to Guayacán, but this page never showed up. Maybe the treasure is at another URL, or the pirates took the file.",
     "notFound.outroLead":
       "Head back home or check the upcoming meetups. If you think this is a mistake, email us at",
-    "notFound.codeStatus": "lost-in-space",
+    "notFound.cta": "back to solid ground",
+    "notFound.mapLabel": "// NAVIGATION CHART",
+    "notFound.mapRegion": "GUAYACÁN / IV REGION",
+    "notFound.mapCoast": "COQUIMBO COAST",
+    "notFound.mapTreasure": "NO TREASURE HERE",
+    "notFound.mapNote": "just a broken route",
+    "notFound.mapScale": "SCALE 1:404",
+    "notFound.mapLat": "LAT: NOT FOUND",
+    "notFound.mapLong": "LONG: NO MAP",
+    "notFound.mapWest": "W",
   } satisfies Record<UIKey, string>,
 } as const;

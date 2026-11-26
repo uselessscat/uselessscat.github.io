@@ -123,22 +123,61 @@ const switchToDark = t("themeToggle.switchToDark");
 
     apply(currentTheme(), false);
 
+    // Fade every themed color across the page on theme changes.
+    const transitionMs = (): number => {
+      const raw = window
+        .getComputedStyle(root)
+        .getPropertyValue("--theme-transition-duration")
+        .trim();
+      const value = Number.parseFloat(raw);
+      if (!Number.isFinite(value)) return 300;
+      if (raw.endsWith("ms")) return value;
+      if (raw.endsWith("s")) return value * 1000;
+      return value;
+    };
+
+    let transitionTimer: number | undefined;
+
+    const applyAnimated = (theme: "dark" | "light", persist: boolean) => {
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      if (reduceMotion) {
+        apply(theme, persist);
+        return;
+      }
+
+      const duration = transitionMs();
+
+      root.classList.add("theme-transition");
+      // Resolve styles with the transition already active so the fade
+      // starts from the current colors instead of mid-way.
+      void root.offsetWidth;
+      apply(theme, persist);
+
+      window.clearTimeout(transitionTimer);
+      transitionTimer = window.setTimeout(() => {
+        root.classList.remove("theme-transition");
+      }, duration + 100);
+    };
+
     buttons.forEach((button) => {
       button.addEventListener("click", () => {
-        apply(currentTheme() === "light" ? "dark" : "light", true);
+        applyAnimated(currentTheme() === "light" ? "dark" : "light", true);
       });
     });
 
     // Only follow the system if the user has not chosen manually yet.
     colorSchemeQuery.addEventListener("change", (event) => {
       if (storedTheme() === null)
-        apply(event.matches ? "light" : "dark", false);
+        applyAnimated(event.matches ? "light" : "dark", false);
     });
 
     window.addEventListener("storage", (event) => {
       if (event.key !== STORAGE_KEY) return;
       if (event.newValue === "dark" || event.newValue === "light") {
-        apply(event.newValue, false);
+        applyAnimated(event.newValue, false);
       }
     });
   }

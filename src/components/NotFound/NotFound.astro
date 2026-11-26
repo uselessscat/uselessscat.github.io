@@ -1,0 +1,58 @@
+---
+import { getSite } from "../../data/site";
+import type { Lang } from "../../i18n/ui";
+import { getLocalePath, toLang, useTranslations } from "../../i18n/utils";
+import TreasureMap from "./TreasureMap.astro";
+
+interface Props {
+  /** Page language. Detected from Astro by default. */
+  lang?: Lang;
+}
+
+const { lang: langProp } = Astro.props;
+const lang: Lang = langProp ?? toLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const site = getSite(lang);
+const homeHref = getLocalePath(lang, "/#inicio");
+---
+
+<main
+  id="contenido"
+  class="mx-auto w-full max-w-6xl flex-1 px-5 pb-14 pt-12 sm:pt-16 lg:pt-20"
+>
+  <div class="grid grid-cols-1 gap-y-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:grid-rows-[auto_1fr] lg:gap-x-16 lg:gap-y-0">
+    <div class="max-w-xl lg:col-start-1 lg:row-start-1">
+      <p class="font-display text-xs tracking-wider text-ember-400 light:text-ember-300">
+        {t("notFound.eyebrow")}
+      </p>
+
+      <h1 class="mt-4 text-balance font-display text-[clamp(1.75rem,3.6vw,2.1rem)] leading-tight text-cream">
+        {t("notFound.title")}
+      </h1>
+
+      <div class="mt-6 flex items-center gap-1.5" aria-hidden="true">
+        <span class="h-px w-48 bg-linear-to-r from-ember-600/80 via-night-500/70 to-transparent sm:w-72"></span>
+        <span class="size-1.5 bg-ember-500/80"></span>
+      </div>
+    </div>
+
+    <TreasureMap
+      lang={lang}
+      class="mx-auto w-full max-w-lg lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-1 lg:max-w-none"
+    />
+
+    <div class="max-w-xl lg:col-start-1 lg:row-start-2 lg:mt-8">
+      <div class="prose-pixel">
+        <p>{t("notFound.intro")}</p>
+        <p>
+          {t("notFound.outroLead")}
+          <a href={`mailto:${site.email}`}>{site.email}</a>.
+        </p>
+      </div>
+
+      <a class="pixel-btn mt-10" href={homeHref}>
+        ← {t("notFound.cta")}
+      </a>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,349 @@
+---
+import type { Lang } from "../../i18n/ui";
+import { toLang, useTranslations } from "../../i18n/utils";
+
+interface Props {
+  /** Map labels language. Detected from Astro by default. */
+  lang?: Lang;
+  /** Additional utility classes for the SVG. */
+  class?: string;
+}
+
+const { lang: langProp, class: className = "" } = Astro.props;
+const lang: Lang = langProp ?? toLang(Astro.currentLocale);
+const t = useTranslations(lang);
+---
+
+<svg
+  viewBox="0 0 400 340"
+  class:list={["block h-auto w-full", className]}
+  role="presentation"
+  aria-hidden="true"
+  focusable="false"
+  shape-rendering="crispEdges"
+>
+  <defs>
+    <pattern id="chart-dots" width="8" height="8" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="0.5" fill="var(--color-dim)" opacity="0.28" />
+    </pattern>
+  </defs>
+
+  <rect width="400" height="340" fill="url(#chart-dots)" />
+
+  <!-- Faint marks in the paper -->
+  <g
+    fill="none"
+    stroke="var(--color-cream)"
+    stroke-width="1"
+    stroke-opacity="0.08"
+  >
+    <path d="M12 104h7M15.5 100.5v7" />
+    <path d="M370 132h7M373.5 128.5v7" />
+    <path d="M140 318h7M143.5 314.5v7" />
+    <path d="M356 246h7M359.5 242.5v7" />
+  </g>
+
+  <!-- Chart frame -->
+  <g
+    fill="none"
+    stroke="var(--color-line-strong)"
+    stroke-width="1.5"
+    stroke-linecap="square"
+  >
+    <path d="M8 30V8h22" />
+    <path d="M370 8h22v22" />
+    <path d="M8 310v22h22" />
+    <path d="M392 310v22h-22" />
+  </g>
+
+  <!-- Chart headings -->
+  <text x="20" y="30" class="chart-kicker">
+    {t("notFound.mapLabel")}
+  </text>
+  <text x="380" y="30" text-anchor="end" class="chart-kicker">
+    {t("notFound.mapRegion")}
+  </text>
+
+  <!-- Compass rose -->
+  <g>
+    <circle
+      cx="66"
+      cy="102"
+      r="34"
+      fill="none"
+      stroke="var(--color-gold-400)"
+      stroke-opacity="0.28"
+      stroke-width="1"
+      stroke-dasharray="1 5"
+    />
+    <path d="M66 62 72 96 66 90 60 96Z" fill="var(--color-gold-text)" />
+    <path
+      d="M66 142 72 108 66 114 60 108Z"
+      fill="var(--color-gold-text)"
+      opacity="0.55"
+    />
+    <path
+      d="M106 102 72 108 78 102 72 96Z"
+      fill="var(--color-gold-text)"
+      opacity="0.8"
+    />
+    <path
+      d="M26 102 60 96 54 102 60 108Z"
+      fill="var(--color-gold-text)"
+      opacity="0.8"
+    />
+    <path
+      d="M88 80 72 96 80 96 74 104Z"
+      fill="var(--color-ember-500)"
+      opacity="0.9"
+    />
+    <path
+      d="M44 80 60 96 52 96 58 104Z"
+      fill="var(--color-ember-500)"
+      opacity="0.7"
+    />
+    <path
+      d="M88 124 74 104 80 104 72 96Z"
+      fill="var(--color-ember-700)"
+      opacity="0.8"
+    />
+    <path
+      d="M44 124 58 104 52 104 60 96Z"
+      fill="var(--color-ember-700)"
+      opacity="0.6"
+    />
+    <rect x="60" y="96" width="12" height="12" fill="var(--color-ember-500)" />
+    <rect x="63" y="93" width="6" height="18" fill="var(--color-ember-300)" />
+
+    <text x="66" y="52" text-anchor="middle" class="chart-kicker">
+      N
+    </text>
+    <text x="116" y="105" class="chart-label">
+      E
+    </text>
+    <text x="66" y="158" text-anchor="middle" class="chart-label">
+      S
+    </text>
+    <text x="16" y="105" class="chart-label" aria-hidden="true">
+      {t("notFound.mapWest")}
+    </text>
+  </g>
+
+  <!-- Island -->
+  <g>
+    <path
+      d="M126 146h8v-12h16v-8h22v-8h24v8h18v8h12v12h8v18h8v20h-8v14h-12v12h-16v8h-20v8h-24v-8h-16v-10h-12v-12h-8v-18h-8v-20h8Z"
+      fill="var(--color-night-800)"
+      stroke="var(--color-gold-400)"
+      stroke-width="1.5"
+      stroke-dasharray="4 4"
+    />
+    <path
+      d="M144 150h10v6h-10zM158 140h8v8h-8zM176 132h16v6h-16zM202 142h8v8h-8zM216 162h10v10h-10zM150 190h14v8h-14zM196 196h12v8h-12z"
+      fill="var(--color-night-600)"
+      opacity="0.65"
+    />
+
+    <!-- Treasure marker -->
+    <path
+      d="M170 168h20v6h-20zM177 161h6v20h-6z"
+      fill="var(--color-muted)"
+      opacity="0.7"
+    />
+    <rect
+      x="174"
+      y="190"
+      width="10"
+      height="10"
+      fill="var(--color-night-900)"
+      stroke="var(--color-cream)"
+      stroke-width="1.5"
+    />
+    <rect x="177" y="193" width="4" height="4" fill="var(--color-ember-400)" />
+    <text x="179" y="214" text-anchor="middle" class="chart-label chart-isle">
+      ivdevs.cl
+    </text>
+  </g>
+
+  <text x="150" y="248" text-anchor="middle" class="chart-micro chart-coast">
+    {t("notFound.mapCoast")}
+  </text>
+
+  <!-- Dotted route from the island to the X -->
+  <path
+    d="M242 170h28v-16h16v-14"
+    fill="none"
+    stroke="var(--color-gold-400)"
+    stroke-width="1.4"
+    stroke-dasharray="3 5"
+    opacity="0.85"
+  />
+  <path
+    d="M276 154h3v3h-3zM284 142h3v3h-3z"
+    fill="var(--color-gold-400)"
+    opacity="0.9"
+  />
+
+  <!-- Pixel X -->
+  <g>
+    <!-- North-west face -->
+    <g fill="var(--color-ember-300)">
+      <rect x="300" y="74" width="12" height="12" />
+      <rect x="300" y="86" width="12" height="12" />
+      <rect x="312" y="86" width="12" height="12" />
+      <rect x="312" y="98" width="12" height="12" />
+      <rect x="324" y="98" width="12" height="12" />
+      <rect x="324" y="110" width="12" height="12" />
+    </g>
+    <!-- South-east face -->
+    <g fill="var(--color-ember-700)">
+      <rect x="348" y="122" width="12" height="12" />
+      <rect x="360" y="122" width="12" height="12" />
+      <rect x="360" y="134" width="12" height="12" />
+      <rect x="372" y="134" width="12" height="12" />
+      <rect x="372" y="146" width="12" height="12" />
+    </g>
+    <!-- Body -->
+    <g fill="var(--color-ember-500)">
+      <rect x="372" y="74" width="12" height="12" />
+      <rect x="360" y="86" width="12" height="12" />
+      <rect x="372" y="86" width="12" height="12" />
+      <rect x="348" y="98" width="12" height="12" />
+      <rect x="360" y="98" width="12" height="12" />
+      <rect x="336" y="110" width="12" height="12" />
+      <rect x="348" y="110" width="12" height="12" />
+      <rect x="312" y="122" width="12" height="12" />
+      <rect x="324" y="122" width="12" height="12" />
+      <rect x="336" y="122" width="12" height="12" />
+      <rect x="300" y="134" width="12" height="12" />
+      <rect x="348" y="134" width="12" height="12" />
+      <rect x="300" y="146" width="12" height="12" />
+    </g>
+  </g>
+
+  <!-- X caption -->
+  <text x="344" y="190" class="chart-big chart-big--shadow">
+    404
+  </text>
+  <text x="342" y="188" class="chart-big">
+    404
+  </text>
+  <text x="338" y="206" text-anchor="middle" class="chart-kicker">
+    {t("notFound.mapTreasure")}
+  </text>
+  <text x="342" y="218" text-anchor="middle" class="chart-note">
+    {t("notFound.mapNote")}
+  </text>
+
+  <!-- Little ship -->
+  <g transform="translate(176 264)">
+    <rect x="18" y="20" width="30" height="4" fill="var(--color-ember-700)" />
+    <rect x="22" y="24" width="22" height="4" fill="var(--color-ember-600)" />
+    <rect x="27" y="28" width="12" height="3" fill="var(--color-ember-700)" />
+    <rect x="32" y="-12" width="2" height="32" fill="var(--color-gold-400)" />
+    <path
+      d="M24-8h8v3h-8zM21-5h11v3h-11zM18-2h14v3h-14zM15 1h17v3h-17z"
+      fill="var(--color-cream)"
+      opacity="0.9"
+    />
+    <rect x="35" y="-16" width="8" height="4" fill="var(--color-ember-500)" />
+    <path
+      d="M0 34h10v2H0zM14 38h12v2H14zM40 36h8v2h-8z"
+      fill="var(--color-night-500)"
+    />
+  </g>
+
+  <!-- Small rocks -->
+  <g fill="var(--color-night-500)" opacity="0.85">
+    <path d="M256 250h10v4h-10zM260 246h4v4h-4z" />
+    <path d="M90 236h8v3h-8zM94 232h4v4h-4z" />
+    <path d="M104 266h6v3h-6zM107 262h3v4h-3z" />
+  </g>
+
+  <text x="380" y="282" text-anchor="end" class="chart-micro">
+    {t("notFound.mapScale")}
+  </text>
+  <text x="20" y="324" class="chart-micro">
+    {t("notFound.mapLat")}
+  </text>
+  <text x="380" y="324" text-anchor="end" class="chart-micro">
+    {t("notFound.mapLong")}
+  </text>
+</svg>
+
+<style>
+  .chart-kicker {
+    font-family: var(--font-display-family);
+    font-size: 7.5px;
+    letter-spacing: 0.12em;
+    fill: var(--color-gold-text-strong);
+    text-transform: uppercase;
+  }
+
+  .chart-label {
+    font-family: var(--font-display-family);
+    font-size: 7px;
+    letter-spacing: 0.08em;
+    fill: var(--color-muted);
+  }
+
+  .chart-isle {
+    fill: var(--color-gold-text-strong);
+  }
+
+  .chart-micro {
+    font-family: var(--font-display-family);
+    font-size: 6.5px;
+    letter-spacing: 0.08em;
+    fill: var(--color-dim);
+    text-transform: uppercase;
+  }
+
+  .chart-note {
+    font-family: var(--font-display-family);
+    font-size: 7px;
+    font-style: italic;
+    letter-spacing: 0.04em;
+    fill: var(--color-dim);
+  }
+
+  .chart-big {
+    font-family: var(--font-display-family);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    fill: var(--color-ember-400);
+  }
+
+  .chart-big--shadow {
+    fill: var(--color-ember-700);
+  }
+
+  /* On small screens the map is wider than the readable minimum for its
+     labels, so they grow in user units and the coast is nudged left. */
+  @media (max-width: 640px) {
+    .chart-kicker {
+      font-size: 9.5px;
+    }
+
+    .chart-label {
+      font-size: 8px;
+    }
+
+    .chart-micro {
+      font-size: 8.5px;
+    }
+
+    .chart-note {
+      font-size: 8.5px;
+    }
+
+    .chart-big {
+      font-size: 27px;
+    }
+
+    .chart-coast {
+      transform: translateX(-22px);
+    }
+  }
+</style>

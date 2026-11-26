@@ -50,6 +50,9 @@
   --color-timeline-stem-hover: #c95f40;
 
   --shadow-pixel: 4px 4px 0 0 rgb(3 2 8 / 0.7);
+
+  /* Fade duration for theme changes */
+  --theme-transition-duration: 300ms;
 }
 
 /* ---------- Light theme: Daytime Valley ---------- */
@@ -156,6 +159,7 @@
 
 @layer base {
   html {
+    scrollbar-gutter: stable;
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
     background-color: var(--color-night-950);
@@ -441,6 +445,19 @@
     color: var(--color-ember-400);
     font-size: 0.65em;
   }
+}
+
+/* ---------- Transición de tema ---------- */
+
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition-property:
+    color, background-color, border-color, outline-color, text-decoration-color,
+    fill, stroke, box-shadow, transform, scale, opacity;
+  transition-duration: var(--theme-transition-duration);
+  transition-timing-function: ease-in-out;
 }
 
 /* ---------- Animations ---------- */

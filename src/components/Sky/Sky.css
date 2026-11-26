@@ -285,6 +285,10 @@
 .sky__vignette {
   position: absolute;
   inset: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.sky__vignette--night {
   background:
     radial-gradient(
       115% 90% at 50% 35%,
@@ -318,7 +322,16 @@
 
 /* ---------- Light sky: daytime valley ---------- */
 
-[data-theme="light"] .sky {
+/*
+ * Capa diurna apilada sobre la noche. Al cambiar de tema se funde en
+ * opacidad, así el cross-fade también cubre los gradientes (que no son
+ * interpolables) y las estrellas/nebulosa que quedan debajo.
+ */
+.sky__day {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
   background:
     radial-gradient(
       120% 52% at 50% 112%,
@@ -342,12 +355,11 @@
       transparent 72%
     ),
     linear-gradient(180deg, #f8f6f1 0%, #f7f5f0 58%, #f2ede3 100%);
+  transition: opacity 1s ease-in-out;
 }
 
-[data-theme="light"] .sky__nebula,
-[data-theme="light"] .sky__stars,
-[data-theme="light"] .sky__flare {
-  display: none;
+[data-theme="light"] .sky__day {
+  opacity: 1;
 }
 
 [data-theme="light"] .sky__grain {
@@ -355,7 +367,8 @@
   mix-blend-mode: multiply;
 }
 
-[data-theme="light"] .sky__vignette {
+.sky__vignette--day {
+  opacity: 0;
   background:
     radial-gradient(
       130% 105% at 50% 0%,
@@ -369,4 +382,12 @@
       transparent 70%,
       rgb(11 16 38 / 0.04) 100%
     );
+}
+
+[data-theme="light"] .sky__vignette--night {
+  opacity: 0;
+}
+
+[data-theme="light"] .sky__vignette--day {
+  opacity: 1;
 }
