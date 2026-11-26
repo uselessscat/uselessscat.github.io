@@ -1,0 +1,79 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Nav from "../../components/Nav/Nav.astro";
+import ContentPage from "../../components/ContentPage/ContentPage.astro";
+import Footer from "../../components/Footer/Footer.astro";
+
+const lang = "en";
+---
+
+<Layout
+  lang={lang}
+  title="MANIFESTO — IV Devs"
+  description="The values that drive IV Devs: respect, good faith, collaboration, and the desire to share knowledge in the IV Region."
+>
+  <Nav lang={lang} />
+
+  <ContentPage lang={lang} title="MANIFESTO" eyebrow="// COMMUNITY">
+    <p>
+      Everyone who is part of this community firmly believes that inside every
+      person there is an <strong>unmatched potential</strong> to create and
+      positively affect those around us. Even more so when that ability joins
+      others: <strong>the whole is greater than the sum of its parts</strong>.
+    </p>
+
+    <h2>We are respectful</h2>
+    <p>
+      In a community there are diverse opinions and points of view. We always
+      accept them with respect.
+    </p>
+
+    <h2>We act in good faith</h2>
+    <p>
+      The contributions of other members are as important as our own, and are
+      made with as good intentions as ours.
+    </p>
+
+    <h2>We are collaborators</h2>
+    <p>
+      There is always something to learn in every new adventure. That is why we
+      are willing to collaborate with others on their projects.
+    </p>
+
+    <h2>We are open</h2>
+    <p>
+      There is nothing to hide: if we have difficulties or problems, we ask for
+      help.
+    </p>
+
+    <h2>We share and enjoy</h2>
+    <p>
+      We enjoy every line of code because we know it can change the world.
+      Knowledge is free: our work, experience, and results are available to the
+      community.
+    </p>
+
+    <h2>We are restless and motivated</h2>
+    <p>
+      To make things better, to break the cycle, to be disruptive, energetic,
+      and critical of our surroundings, while always motivating change.
+    </p>
+
+    <h2>Our commitment</h2>
+    <ul>
+      <li>Remain open and transparent.</li>
+      <li>Contribute to the professional growth of our members.</li>
+      <li>Never hide problems: solve them together.</li>
+      <li>
+        Be inclusive: it is our differences that make us a unique community.
+      </li>
+    </ul>
+
+    <p>
+      When we communicate we remain courteous and respectful, avoid pointless
+      arguments, always reply —sometimes late, but always— and never spam.
+    </p>
+  </ContentPage>
+
+  <Footer lang={lang} />
+</Layout>

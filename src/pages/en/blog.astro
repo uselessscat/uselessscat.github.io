@@ -1,0 +1,74 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Nav from "../../components/Nav/Nav.astro";
+import ContentPage from "../../components/ContentPage/ContentPage.astro";
+import Footer from "../../components/Footer/Footer.astro";
+import { getSite } from "../../data/site";
+import { useTranslations } from "../../i18n/utils";
+
+const lang = "en";
+const t = useTranslations(lang);
+const site = getSite(lang);
+
+const posts = [
+  {
+    date: "17 MAY 2017",
+    title: "Personalizando el dominio de una app alojada en Heroku",
+    tag: "Deploy",
+  },
+  { date: "15 MAY 2017", title: "Amazon Web Services II", tag: "Cloud" },
+  { date: "08 MAY 2017", title: "Bootstrap: primeros pasos", tag: "Frontend" },
+  {
+    date: "01 MAY 2017",
+    title: "Eduardo Díaz, autor de “La Naturaleza del Software”",
+    tag: "Entrevista",
+  },
+  { date: "20 ABR 2017", title: "¿Qué es UX y UI?", tag: "Diseño" },
+  { date: "18 ABR 2017", title: "¿Qué es Bootstrap?", tag: "Frontend" },
+  { date: "12 ABR 2017", title: "Amazon Web Services I", tag: "Cloud" },
+  {
+    date: "26 MAR 2017",
+    title: "Quincy Larson habla con la comunidad",
+    tag: "Entrevista",
+  },
+  { date: "27 MAR 2017", title: "El camino del Jedi", tag: "Carrera" },
+  {
+    date: "11 ENE 2017",
+    title: "Configuración de Raspberry Pi 3",
+    tag: "Hardware",
+  },
+];
+---
+
+<Layout
+  lang={lang}
+  title={`${t("blog.title")} — IV Devs`}
+  description={t("blog.description")}
+>
+  <Nav lang={lang} />
+
+  <ContentPage lang={lang} title={t("blog.title")} eyebrow={t("blog.eyebrow")}>
+    <p>{t("blog.intro")}</p>
+
+    <div class="mt-8 border-y border-line">
+      {posts.map((post) => (
+        <article
+          lang="es"
+          class="flex flex-col gap-1 border-b border-line py-4 last:border-0 sm:flex-row sm:items-baseline sm:gap-4"
+        >
+          <time class="shrink-0 font-display text-xs tracking-wide text-gold-text-strong sm:w-28">
+            {post.date}
+          </time>
+          <h2 class="title-plain text-base leading-snug">{post.title}</h2>
+          <span class="text-xs text-dim sm:ml-auto">{post.tag}</span>
+        </article>
+      ))}
+    </div>
+
+    <p class="mt-8 text-sm">
+      {t("blog.ctaLead")} <a href={`mailto:${site.email}`}>{site.email}</a>.
+    </p>
+  </ContentPage>
+
+  <Footer lang={lang} />
+</Layout>

@@ -1,0 +1,87 @@
+---
+import { getTimeline } from "../../data/site";
+import type { Lang } from "../../i18n/ui";
+import { toLang, useTranslations } from "../../i18n/utils";
+
+interface Props {
+  /** Block language. Defaults to detection from Astro. */
+  lang?: Lang;
+}
+
+const { lang: langProp } = Astro.props;
+const lang: Lang = langProp ?? toLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const timeline = getTimeline(lang);
+---
+
+<section id="timeline" class="mt-16 sm:mt-20" aria-labelledby="timeline-title">
+  <div class="flex items-center justify-center gap-4">
+    <span
+      class="hidden h-px w-14 bg-night-600 sm:block"
+      aria-hidden="true"
+    ></span>
+    <h2
+      id="timeline-title"
+      class="font-display text-xl leading-none tracking-wide text-cream md:text-2xl"
+    >
+      {t("timeline.heading")}
+    </h2>
+    <span
+      class="hidden h-px w-14 bg-night-600 sm:block"
+      aria-hidden="true"
+    ></span>
+  </div>
+
+  <div class="mt-8 pb-4" role="group" aria-label={t("timeline.ariaLabel")}>
+    <ol class="relative mx-auto flex w-full max-w-4xl items-start px-2 sm:px-5">
+      <span
+        class="absolute left-5 right-5 top-1.75 h-0.5 bg-timeline-line"
+        aria-hidden="true"
+      ></span>
+
+      {timeline.map((item) => (
+        /* eslint-disable astro/jsx-a11y/no-noninteractive-tabindex */
+        // The li is focusable on purpose to reveal the tooltip with the keyboard
+        // (`group-focus-visible`); it does not perform any action.
+        <li
+          class="group relative flex flex-1 flex-col items-center"
+          title={item.label}
+          tabindex="0"
+        >
+          <span class="relative z-10 flex h-4 items-center justify-center">
+            <span
+              class:list={[
+                "block transition-colors duration-150",
+                item.current
+                  ? "size-4 bg-ember-400 shadow-[0_0_16px_rgba(242,129,90,0.55)]"
+                  : "size-3 bg-timeline-node group-hover:bg-ember-400",
+              ]}
+            />
+          </span>
+          <span
+            class:list={[
+              "mt-0.5 w-px transition-colors duration-150",
+              item.current
+                ? "h-5 bg-ember-400/80"
+                : "h-4 bg-timeline-stem group-hover:bg-timeline-stem-hover",
+            ]}
+            aria-hidden="true"
+          />
+          <span
+            class:list={[
+              "mt-1 font-display text-xs leading-none sm:text-base",
+              item.current ? "text-ember-300" : "text-muted",
+            ]}
+          >
+            {item.year}
+          </span>
+
+          <span class="pointer-events-none absolute bottom-full left-1/2 z-20 mb-1 hidden w-40 -translate-x-1/2 border border-ember-600/50 bg-night-900/95 px-2 py-1.5 text-center text-xs leading-snug text-cream opacity-0 shadow-pixel backdrop-blur-sm transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 sm:block">
+            {item.label}
+          </span>
+        </li>
+        /* eslint-enable astro/jsx-a11y/no-noninteractive-tabindex */
+      ))}
+    </ol>
+  </div>
+</section>

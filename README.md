@@ -1,73 +1,63 @@
-# IV Devs Website
+# IV Devs · Website
 
-Sitio de la comunidad **IV Devs** (La Serena / Coquimbo, Chile), publicado en [ivdevs.cl](https://ivdevs.cl).
+Website for the **IV Devs** community (La Serena · Coquimbo). A pixel/terminal-styled landing page with stats, the next meetup, past events, a timeline, and a few content pages. The site is bilingual (Spanish by default, English under `/en`).
 
-## Descripción
+## Stack
 
-El proyecto está basado en [Jekyll 4](https://jekyllrb.com/), por lo que usa Ruby para el manejo de templates. El CSS es HTML/CSS/JS plano, por lo que no necesitas compilar estilos aparte.
+- [Astro](https://docs.astro.build)
+- [Tailwind CSS 4](https://tailwindcss.com/docs)
+- [Storybook](https://storybook.js.org) with [`@storybook-astro/framework`](https://storybook-astro.org)
+- [Lucide](https://lucide.dev) and [`@thesvg`](https://thesvg.org) icons
 
-Dependencias de frontend (vía CDN): **Bootstrap 5.3.9** y **Font Awesome Free 7.3.1**. No se usa jQuery.
+## Getting started
 
-## Requisitos
+Requires [Bun](https://bun.sh) (version pinned in `mise.toml`).
 
-- [Ruby](https://www.ruby-lang.org/es/) 4.0.10 (ver `mise.toml`)
-- o Docker
-
-El repositorio incluye `mise.toml`, así que la forma más simple es:
-
-```bash
-mise install     # instala Ruby 4.0.10
-bundle install
-bundle exec jekyll serve
+```sh
+bun install
+bun run dev        # local site
+bun run storybook  # component workshop
 ```
 
-Abre [http://localhost:4000](http://localhost:4000).
+Other scripts live in `package.json`. Run `bun run validate` (type check + lint + format check) before opening a PR; CI runs the same checks (`.github/workflows/quality-checks.yml`).
 
-Si no usas `mise`, necesitas Ruby >= 2.7 y luego:
+## Project layout
 
-```bash
-bundle install
-bundle exec jekyll serve
-```
+| Path              | What's there                                            |
+| ----------------- | ------------------------------------------------------- |
+| `src/pages/`      | Pages and routes (Spanish at root, English under `en/`) |
+| `src/layouts/`    | Shared page shell                                       |
+| `src/components/` | One folder per component, with its CSS and stories      |
+| `src/data/`       | Editable site content                                   |
+| `src/i18n/`       | UI strings, language helpers and localized slugs        |
+| `src/styles/`     | Global styles and theme tokens                          |
+| `.storybook/`     | Storybook configuration                                 |
 
-## Instalación en Debian/Ubuntu
+## Content and translations
 
-```bash
-sudo apt-get install ruby-full make gcc
-bundle install
-bundle exec jekyll serve
-```
+Site content lives in `src/data/site.ts`; data that depends on the language is read through its getters. UI strings are in `src/i18n/ui.ts`, and localized routes/anchors are mapped in `src/i18n/utils.ts`. New pages go in `src/pages/` and usually compose `Layout`, `Nav`, `ContentPage` and `Footer`.
 
-## Cómo subir un post al blog
+## Design and theming
 
-Crea un archivo en `_posts` con la convención `YYYY-MM-DD-nombre-del-post.md` y
-comienza a redactar. Jekyll usa Markdown para los posts; si no lo manejas, puedes usar este [editor online](https://stackedit.io/editor).
+- Palette, semantic tokens and light-theme overrides: `src/styles/global.css`.
+- Fonts: `astro.config.mjs` (`fonts`), used by the `font-*` utilities in `global.css`.
+- Pixel frame and its variants: `src/components/Card/`.
+- Night/day sky background: `src/components/Sky/Sky.css`.
+- Theme switch: `src/components/ThemeToggle/`.
+- Panels that must stay dark in both themes use the reusable `.theme-dark` scope.
 
-## Opción Docker
+The theme is driven by `data-theme="dark|light"`. In Storybook, use the **Theme** toolbar to preview both, or append `&globals=theme:light` to a story URL.
 
-El `Dockerfile` usa Ruby 4.0 y deja lista la imagen para desarrollo:
+## Icons
 
-```bash
-docker build -t ivdevs/web .
-docker run --rm -it -v $(pwd):/home/ivdevs/web -p 4000:4000 ivdevs/web \
-  bash -lc "bundle install && bundle exec jekyll serve --host 0.0.0.0"
-```
+UI icons are wrapped in `src/components/Icon/` (map in `icons.ts`), brand icons in `src/components/SocialIcon/` (map in `icons.ts`). Add an entry to the map to use it; types follow automatically.
 
-Luego abre [http://localhost:4000](http://localhost:4000).
+## Component stories
 
-Si prefieres un contenedor persistente:
+Stories are CSF files next to each component (`*.stories.ts`), grouped as `Components/Atoms`, `Molecules` and `Organisms`. Global CSS is loaded in `.storybook/preview.ts`; slots are passed via `args.slots.default`. Prop descriptions come from the JSDoc on each component's props.
 
-```bash
-docker run -it --name ivdevsweb -v $(pwd):/home/ivdevs/web --net host ivdevs/web
-```
+## Conventions
 
-Dentro del contenedor, la primera vez corre `bundle install`. Después lo retomas con `docker start -ia ivdevsweb`.
-
-## Despliegue
-
-El sitio se publica en GitHub Pages mediante GitHub Actions (`.github/workflows/pages.yml`): cada push a `master` construye con Jekyll 4 y despliega el resultado.
-
-- Dominio: definido en `CNAME` (`ivdevs.cl`).
-- En GitHub: *Settings → Pages → Source: GitHub Actions*.
-- El builder clásico de GitHub Pages usa Jekyll 3.8 y **no** usa este `Gemfile`,
-  por eso se migró a Actions.
+- Formatters and linters are configured in `.prettierrc.mjs` and `eslint.config.js`; run them with `bun run format` and `bun run lint:fix`.
+- TypeScript runs in Astro strict mode (`tsconfig.json`); `bun run check` runs `astro check`.
+- Deploys are handled by `.github/workflows/pages.yml` on push.

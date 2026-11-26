@@ -1,0 +1,28 @@
+---
+import { socialIcons, type SocialIconName } from "./icons";
+import "./SocialIcon.css";
+
+interface Props {
+  /** Social network name (key of `socialIcons`). */
+  name: SocialIconName;
+  /** Utility classes for size and color. */
+  class?: string;
+  /**
+   * Icon size (a number in px or any CSS unit).
+   * Defaults to 100% so the container controls the size.
+   */
+  size?: number | string;
+}
+
+const { name, class: className = "", size = "100%" } = Astro.props;
+
+const SocialIconComponent = socialIcons[name] ?? socialIcons.github;
+const classes = ["social-icon", className].filter(Boolean).join(" ");
+---
+
+<SocialIconComponent
+  class={classes}
+  size={size}
+  aria-hidden="true"
+  focusable="false"
+/>

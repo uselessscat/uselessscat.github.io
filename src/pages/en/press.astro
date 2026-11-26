@@ -1,0 +1,113 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Nav from "../../components/Nav/Nav.astro";
+import ContentPage from "../../components/ContentPage/ContentPage.astro";
+import Footer from "../../components/Footer/Footer.astro";
+import { useTranslations } from "../../i18n/utils";
+
+const lang = "en";
+const t = useTranslations(lang);
+
+const mentions = [
+  {
+    date: "17 DIC 2016",
+    outlet: "Universidad Santo Tomás",
+    title:
+      "Curso de Git para analistas programadores del Santo Tomás de Ovalle",
+    excerpt:
+      "El curso se desarrolló en el IP-CFT Santo Tomás Ovalle y reunió a analistas programadores de la provincia de Limarí.",
+    href: "http://enlinea.santotomas.cl/actualidad-institucional/mundo-santo-ctomas/alumnos-analista-programador-participaron-de-curso-de-git/",
+  },
+  {
+    date: "15 AGO 2016",
+    outlet: "Diario El Día",
+    title:
+      "Exitosa maratón tecnológica en La Serena puso el foco en la innovación",
+    excerpt:
+      "Un centenar de personas participó en Challenge 2.0, iniciativa de IV Devs, La Brújula Cowork, Corfo y Universidad Santo Tomás.",
+    href: null,
+  },
+  {
+    date: "10 AGO 2016",
+    outlet: "El Observatodo",
+    title: "Hackatón pretende reunir a más de 100 personas en La Serena",
+    excerpt:
+      "Challenge 2.0 reunió a programadores para trabajar colaborativamente en soluciones tecnológicas.",
+    href: "http://www.elobservatodo.cl/noticia/emprendimiento-regional/hackaton-pretende-reunir-mas-de-100-personas-en-la-serena",
+  },
+  {
+    date: "08 AGO 2016",
+    outlet: "Innovacionchilena.cl",
+    title: "Hackatón pretende reunir a más de 100 personas en La Serena",
+    excerpt:
+      "24 horas para resolver problemáticas regionales a través de tecnología: el desafío de la primera hackatón de La Serena.",
+    href: "http://innovacionchilena.cl/hackaton-pretende-reunir-mas-100-personas-la-serena/",
+  },
+  {
+    date: "08 AGO 2016",
+    outlet: "Radio Montecarlo",
+    title: "Los Dueños de la Tarde",
+    excerpt:
+      "Entrevista sobre Challenge 2.0, la maratón que reunió a programadores en torno a soluciones tecnológicas.",
+    href: null,
+  },
+  {
+    date: "21 MAY 2016",
+    outlet: "Guillermo Díaz",
+    title: "La región de Gabriela Mistral",
+    excerpt:
+      "«Tuve la posibilidad de compartir con la comunidad IV Devs, quienes probablemente son el pilar más importante de este gran desarrollo.»",
+    href: "http://www.guillermodiaz.com/2016/05/la-region-de-gabriela-mistral/",
+  },
+];
+---
+
+<Layout
+  lang={lang}
+  title={`${t("press.title")} — IV Devs`}
+  description={t("press.description")}
+>
+  <Nav lang={lang} />
+
+  <ContentPage
+    lang={lang}
+    title={t("press.title")}
+    eyebrow={t("press.eyebrow")}
+  >
+    <p>{t("press.intro")}</p>
+
+    <div class="mt-8 flex flex-col gap-4">
+      {mentions.map((mention) => (
+        <article lang="es" class="border-l-2 border-ember-600/60 pl-4">
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <time class="font-display text-xs tracking-wide text-gold-text-strong">
+              {mention.date}
+            </time>
+            <span class="font-display text-xs tracking-wide text-cream/80">
+              {mention.outlet}
+            </span>
+          </div>
+          <h2 class="title-plain mt-1.5 text-base leading-snug">
+            {mention.href ? (
+              <a
+                class="!text-cream decoration-ember-500/40 hover:!text-gold-text-strong"
+                href={mention.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {mention.title}
+              </a>
+            ) : (
+              <span class="text-cream">{mention.title}</span>
+            )}
+          </h2>
+          <p class="mt-1 text-sm leading-relaxed text-muted">
+            {mention.excerpt}
+          </p>
+        </article>
+      ))}
+    </div>
+  </ContentPage>
+
+  <Footer lang={lang} />
+</Layout>

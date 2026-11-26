@@ -1,0 +1,155 @@
+---
+import { getNavLinks } from "../../data/site";
+import { defaultLang, type Lang } from "../../i18n/ui";
+import { getLocalePath, toLang, useTranslations } from "../../i18n/utils";
+import LangPicker from "../LangPicker/LangPicker.astro";
+import ThemeToggle from "../ThemeToggle/ThemeToggle.astro";
+import "./Nav.css";
+
+interface Props {
+  /** Path used to mark the active link. Defaults to the current path. */
+  currentPath?: string;
+  /** Active language. Detected from Astro by default. */
+  lang?: Lang;
+}
+
+const { currentPath: currentPathProp, lang: langProp } = Astro.props;
+
+const lang: Lang = langProp ?? toLang(Astro.currentLocale);
+
+const t = useTranslations(lang);
+const navLinks = getNavLinks(lang);
+const homeHref = getLocalePath(lang, "/#inicio");
+
+const currentPathname = currentPathProp ?? Astro.url?.pathname ?? "/";
+
+const currentPath =
+  (currentPathProp ?? Astro.url?.pathname ?? "/").replace(/\/$/, "") || "/";
+
+// In English the home lives at `/en`; in Spanish, at `/`.
+const homePath = lang === defaultLang ? "/" : `/${lang}`;
+
+const isActive = (href: string) => {
+  const path = href.split("#")[0].replace(/\/$/, "") || "/";
+  if (path === homePath) {
+    // Only the home is marked active, not links to its anchors.
+    return currentPath === homePath && href === homeHref;
+  }
+  return path === currentPath;
+};
+---
+
+<header class="iv-nav sticky top-0 z-40">
+  <div class="border-b border-line bg-night-950/70 backdrop-blur-md">
+    <nav
+      class="relative mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 lg:justify-center"
+      aria-label={t("nav.label")}
+    >
+      <a
+        href={homeHref}
+        class="font-display text-sm tracking-wide text-cream lg:hidden"
+        aria-label={t("nav.homeAria")}
+      >
+        &lt;IV&nbsp;DEVS/&gt;
+      </a>
+
+      <ul class="hidden items-center gap-8 lg:flex lg:gap-11">
+        {navLinks.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              class:list={[
+                "nav-link text-base text-cream/80 transition-colors hover:text-gold-text-strong",
+                isActive(link.href) && "text-gold-text-strong",
+              ]}
+              aria-current={isActive(link.href) ? "page" : undefined}
+            >
+              {`/ ${link.label} `}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <div class="ml-auto flex items-center gap-2 lg:absolute lg:right-5 lg:top-1/2 lg:ml-0 lg:-translate-y-1/2">
+        <LangPicker lang={lang} currentPathname={currentPathname} />
+        <ThemeToggle lang={lang} />
+
+        <button
+          type="button"
+          class="pixel-tile lg:hidden"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          data-menu-toggle
+          data-menu-label-open={t("nav.openMenu")}
+          data-menu-label-close={t("nav.closeMenu")}
+        >
+          <span class="sr-only">{t("nav.openMenu")}</span>
+          <span class="menu-icon" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
+      </div>
+    </nav>
+
+    <div
+      id="mobile-menu"
+      class="border-t border-line bg-night-900/95 backdrop-blur-md lg:hidden"
+      data-menu
+      hidden
+    >
+      <ul class="mx-auto max-w-7xl px-5 py-2">
+        {navLinks.map((link) => (
+          <li class="border-b border-line last:border-0">
+            <a
+              href={link.href}
+              class="block py-2.5 text-cream/85 transition-colors hover:text-gold-text-strong"
+            >
+              {`<${link.label}/>`}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle =
+    document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const menu = document.querySelector<HTMLElement>("[data-menu]");
+
+  if (toggle && menu) {
+    const label = toggle.querySelector(".sr-only");
+
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute("aria-expanded", String(open));
+      menu.hidden = !open;
+      if (label) {
+        // Labels are rendered from i18n into the data attributes.
+        const nextLabel = open
+          ? toggle.dataset.menuLabelClose
+          : toggle.dataset.menuLabelOpen;
+        if (nextLabel) label.textContent = nextLabel;
+      }
+    };
+
+    toggle.addEventListener("click", () => {
+      setOpen(toggle.getAttribute("aria-expanded") !== "true");
+    });
+
+    menu.addEventListener("click", (event) => {
+      if (event.target instanceof Element && event.target.closest("a"))
+        setOpen(false);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") setOpen(false);
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.matchMedia("(min-width: 1024px)").matches) setOpen(false);
+    });
+  }
+</script>

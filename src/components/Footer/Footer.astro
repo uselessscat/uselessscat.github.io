@@ -1,0 +1,95 @@
+---
+import ZigZag from "../ZigZag/ZigZag.astro";
+import SocialIcon from "../SocialIcon/SocialIcon.astro";
+import { getSite, socials } from "../../data/site";
+import type { Lang } from "../../i18n/ui";
+import { toLang } from "../../i18n/utils";
+
+interface Props {
+  /** Block language. Defaults to the one detected by Astro. */
+  lang?: Lang;
+}
+
+const { lang: langProp } = Astro.props;
+const lang: Lang = langProp ?? toLang(Astro.currentLocale);
+const site = getSite(lang);
+
+const year = new Date().getFullYear();
+const left = socials.slice(0, 4);
+const right = socials.slice(4);
+---
+
+<footer class="mt-10 pb-10 pt-2 sm:mt-14">
+  <ZigZag class="mx-auto w-28 sm:w-32" />
+
+  <div class="mx-auto mt-8 flex max-w-7xl flex-col items-center gap-6 px-5 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-8">
+    <ul class="order-2 flex w-full flex-wrap justify-center gap-2 sm:gap-3 lg:order-0 lg:w-auto lg:flex-nowrap lg:justify-start">
+      {left.map((social) => (
+        <li>
+          <a
+            class="pixel-tile social-tile"
+            href={social.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={social.name}
+            title={social.name}
+          >
+            <SocialIcon name={social.icon} />
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <div class="order-1 max-w-full px-1 text-center lg:order-0">
+      <p class="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[0.8rem] leading-relaxed text-cream/85 sm:text-base">
+        <span>
+          <span class="text-ember-400 light:text-ember-300">~$</span>
+          whoami
+        </span>
+        <span class="text-ember-400 light:text-ember-300" aria-hidden="true">
+          →
+        </span>
+        <span>dev-coquimbo</span>
+        <span class="hidden text-dim sm:inline" aria-hidden="true">
+          ·
+        </span>
+        <span class="whitespace-nowrap text-gold-text light:text-gold-text-strong">
+          -29.9027, -71.2519
+        </span>
+        <span class="hidden text-dim sm:inline" aria-hidden="true">
+          ·
+        </span>
+        <span class="whitespace-nowrap text-cream/60">v3.0.0</span>
+        <span class="cursor-blink" aria-hidden="true"></span>
+      </p>
+      <p class="mt-2 text-xs leading-relaxed text-dim">
+        © 2015-{year} IV Devs ·
+        <a
+          class="transition-colors hover:text-ember-300"
+          href={`mailto:${site.email}`}
+        >
+          {site.email}
+        </a>
+        <span class="mx-1.5">·</span>
+        {site.location}
+      </p>
+    </div>
+
+    <ul class="order-3 flex w-full flex-wrap justify-center gap-2 sm:gap-3 lg:order-0 lg:w-auto lg:flex-nowrap lg:justify-end">
+      {right.map((social) => (
+        <li>
+          <a
+            class="pixel-tile social-tile"
+            href={social.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={social.name}
+            title={social.name}
+          >
+            <SocialIcon name={social.icon} />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</footer>

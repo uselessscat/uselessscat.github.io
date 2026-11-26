@@ -1,0 +1,24 @@
+---
+interface Props {
+  theme?: "dark" | "light";
+  layout?: "fullscreen" | "centered" | "padded";
+}
+
+const { theme = "dark", layout = "fullscreen" } = Astro.props;
+
+const surface = layout !== "centered";
+
+const layoutClass = !surface
+  ? "contents"
+  : layout === "padded"
+    ? "min-h-[320px] w-full p-6"
+    : "min-h-screen w-full";
+---
+
+<div
+  data-theme={theme}
+  data-layout={layout}
+  class:list={[layoutClass, surface && "bg-night-950 text-cream"]}
+>
+  <slot />
+</div>

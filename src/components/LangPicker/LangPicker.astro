@@ -1,0 +1,136 @@
+---
+import { defaultLang, languages, type Lang } from "../../i18n/ui";
+import {
+  getLangFromUrl,
+  getLocaleSwitcherHref,
+  useTranslations,
+} from "../../i18n/utils";
+import "./LangPicker.css";
+
+interface Props {
+  /** Active language. Detected from the current URL by default. */
+  lang?: Lang;
+  /** Path used to build the equivalent link. */
+  currentPathname?: string;
+  /** Extra utility classes for the container. */
+  class?: string;
+}
+
+const {
+  lang: langProp,
+  currentPathname: currentPathnameProp,
+  class: className = "",
+} = Astro.props;
+
+const localeFromAstro = Astro.currentLocale;
+const lang: Lang =
+  langProp ??
+  (localeFromAstro === "es" || localeFromAstro === "en"
+    ? localeFromAstro
+    : Astro.url
+      ? getLangFromUrl(Astro.url)
+      : defaultLang);
+
+const currentPathname = currentPathnameProp ?? Astro.url?.pathname ?? "/";
+const t = useTranslations(lang);
+const locales: Lang[] = ["es", "en"];
+
+const targetLocale: Lang = lang === "es" ? "en" : "es";
+const targetHref = getLocaleSwitcherHref(targetLocale, currentPathname);
+const targetLabel = t("langSwitcher.switchTo").replace(
+  "{language}",
+  languages[targetLocale],
+);
+
+const options = locales.map((locale) => ({
+  locale,
+  isActive: locale === lang,
+}));
+---
+
+<div
+  class:list={["lang-picker", className]}
+  data-lang-picker
+  data-current-lang={lang}
+>
+  <a
+    class="lang-picker__link"
+    href={targetHref}
+    hreflang={targetLocale}
+    aria-label={targetLabel}
+    title={targetLabel}
+  >
+    <span class="lang-picker__track" aria-hidden="true">
+      <span class="lang-picker__thumb"></span>
+      {options.map((option) => (
+        <span
+          class:list={[
+            "lang-picker__option",
+            option.isActive && "lang-picker__option--active",
+          ]}
+          lang={option.locale}
+        >
+          {option.locale.toUpperCase()}
+        </span>
+      ))}
+    </span>
+  </a>
+</div>
+
+<script is:inline>
+  // Keeps anchors (#inicio, #eventos, ...) when switching languages and
+  // animates the switch thumb before navigating to the other locale.
+  (() => {
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    document.querySelectorAll("[data-lang-picker]").forEach((picker) => {
+      const link = picker.querySelector("a");
+      if (!link) return;
+
+      const baseHref = link.getAttribute("href") ?? link.href;
+      const syncHash = () => {
+        link.href = `${baseHref}${window.location.hash}`;
+      };
+
+      syncHash();
+      window.addEventListener("hashchange", syncHash);
+
+      let navigating = false;
+
+      link.addEventListener("click", (event) => {
+        syncHash();
+
+        if (navigating) {
+          event.preventDefault();
+          return;
+        }
+
+        // Modified clicks (new tab, download...) proceed as usual.
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey ||
+          reducedMotion
+        ) {
+          return;
+        }
+
+        const target = link.getAttribute("hreflang");
+        if (!target) return;
+
+        event.preventDefault();
+        navigating = true;
+        picker.dataset.switching = target;
+
+        window.setTimeout(() => {
+          window.location.href = link.href;
+        }, 200);
+      });
+    });
+  })();
+</script>

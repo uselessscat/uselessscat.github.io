@@ -1,0 +1,58 @@
+@layer components {
+  .card {
+    --notch: 14px;
+    --frame-color: var(--color-ember-500);
+    position: relative;
+    padding: 2px;
+    background: var(--frame-color);
+    clip-path: polygon(
+      0 var(--notch),
+      var(--notch) var(--notch),
+      var(--notch) 0,
+      calc(100% - var(--notch)) 0,
+      calc(100% - var(--notch)) var(--notch),
+      100% var(--notch),
+      100% calc(100% - var(--notch)),
+      calc(100% - var(--notch)) calc(100% - var(--notch)),
+      calc(100% - var(--notch)) 100%,
+      var(--notch) 100%,
+      var(--notch) calc(100% - var(--notch)),
+      0 calc(100% - var(--notch))
+    );
+  }
+
+  .card__inner {
+    position: relative;
+    height: 100%;
+    clip-path: inherit;
+    background:
+      linear-gradient(180deg, var(--color-sheen), transparent 38%),
+      var(--color-panel);
+    transition: background-color 0.2s ease;
+  }
+
+  .card--dim {
+    --frame-color: var(--color-night-600);
+  }
+
+  .card--gold {
+    --frame-color: var(--color-gold-400);
+  }
+
+  .card--gold .card__inner {
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 0.12), transparent 55%),
+      var(--color-gold-400);
+    color: var(--color-on-gold);
+  }
+
+  .card--glow {
+    filter: drop-shadow(0 0 14px rgb(229 113 76 / 0.12));
+  }
+
+  @media (max-width: 640px) {
+    .card {
+      --notch: 10px;
+    }
+  }
+}

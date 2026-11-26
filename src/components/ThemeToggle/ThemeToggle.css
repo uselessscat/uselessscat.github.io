@@ -1,0 +1,234 @@
+.theme-toggle {
+  --toggle-width: 4.5rem;
+  --toggle-height: 2.5rem;
+  --toggle-pad: 0.25rem;
+  --toggle-notch: 4px;
+  --toggle-travel: calc(var(--toggle-width) - var(--toggle-height));
+  position: relative;
+  flex: none;
+  display: block;
+  width: var(--toggle-width);
+  height: var(--toggle-height);
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- Track ---------- */
+
+.theme-toggle__track {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-night-800);
+  box-shadow: inset 0 0 0 2px var(--color-night-600);
+  clip-path: polygon(
+    0 var(--toggle-notch),
+    var(--toggle-notch) var(--toggle-notch),
+    var(--toggle-notch) 0,
+    calc(100% - var(--toggle-notch)) 0,
+    calc(100% - var(--toggle-notch)) var(--toggle-notch),
+    100% var(--toggle-notch),
+    100% calc(100% - var(--toggle-notch)),
+    calc(100% - var(--toggle-notch)) calc(100% - var(--toggle-notch)),
+    calc(100% - var(--toggle-notch)) 100%,
+    var(--toggle-notch) 100%,
+    var(--toggle-notch) calc(100% - var(--toggle-notch)),
+    0 calc(100% - var(--toggle-notch))
+  );
+  transition:
+    background-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+/* ---------- Stars ---------- */
+
+.theme-toggle__star {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--color-cream);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--color-cream) 65%, transparent);
+  opacity: 0.9;
+  transition:
+    opacity 0.3s ease,
+    transform 0.4s ease;
+  animation: theme-toggle-twinkle 3s ease-in-out infinite;
+}
+
+.theme-toggle__star--1 {
+  top: 18%;
+  left: 68%;
+  animation-delay: -0.4s;
+}
+
+.theme-toggle__star--2 {
+  top: 46%;
+  left: 59%;
+  animation-delay: -1.2s;
+}
+
+.theme-toggle__star--3 {
+  top: 38%;
+  left: 80%;
+  animation-delay: -2s;
+}
+
+/* ---------- Cloud ---------- */
+
+.theme-toggle__cloud {
+  position: absolute;
+  bottom: 6%;
+  left: 4.5%;
+  display: grid;
+  width: 42%;
+  height: 56%;
+  place-items: center;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(0.35rem);
+  transition:
+    opacity 0.35s ease 0.1s,
+    transform 0.45s cubic-bezier(0.81, -0.04, 0.38, 1.5);
+}
+
+.theme-toggle__cloud svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+  stroke-width: 1.5;
+}
+
+/* ---------- Thumb ---------- */
+
+.theme-toggle__thumb {
+  position: absolute;
+  bottom: var(--toggle-pad);
+  left: var(--toggle-pad);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: calc(var(--toggle-height) - var(--toggle-pad) * 2);
+  height: calc(var(--toggle-height) - var(--toggle-pad) * 2);
+  color: var(--color-night-950);
+  background: var(--color-cream);
+  clip-path: polygon(
+    0 3px,
+    3px 3px,
+    3px 0,
+    calc(100% - 3px) 0,
+    calc(100% - 3px) 3px,
+    100% 3px,
+    100% calc(100% - 3px),
+    calc(100% - 3px) calc(100% - 3px),
+    calc(100% - 3px) 100%,
+    3px 100%,
+    3px calc(100% - 3px),
+    0 calc(100% - 3px)
+  );
+  transition:
+    transform 0.4s cubic-bezier(0.81, -0.04, 0.38, 1.5),
+    background-color 0.35s ease,
+    color 0.35s ease,
+    scale 0.2s ease;
+}
+
+.theme-toggle:hover .theme-toggle__thumb {
+  scale: 1.04;
+}
+
+.theme-toggle:active .theme-toggle__thumb {
+  scale: 0.96;
+}
+
+/* ---------- Thumb icons ---------- */
+
+.theme-toggle__icon {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.25s ease;
+}
+
+.theme-toggle__icon svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.theme-toggle__sun {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.4);
+}
+
+/* ---------- Light theme: day ---------- */
+
+[data-theme="light"] .theme-toggle__track {
+  background: #5db9d8;
+  box-shadow: inset 0 0 0 2px #2d7f9e;
+}
+
+[data-theme="light"] .theme-toggle__thumb {
+  color: var(--color-on-gold);
+  background: var(--color-gold-400);
+  transform: translateX(var(--toggle-travel));
+}
+
+[data-theme="light"] .theme-toggle__moon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
+}
+
+[data-theme="light"] .theme-toggle__sun {
+  opacity: 1;
+  transform: none;
+}
+
+[data-theme="light"] .theme-toggle__star {
+  opacity: 0;
+  transform: scale(0.4);
+  animation: none;
+}
+
+[data-theme="light"] .theme-toggle__cloud {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Motion ---------- */
+
+@keyframes theme-toggle-twinkle {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 0.95;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle__track,
+  .theme-toggle__thumb,
+  .theme-toggle__icon,
+  .theme-toggle__star,
+  .theme-toggle__cloud {
+    transition-duration: 0.01ms;
+  }
+
+  .theme-toggle__star {
+    animation: none;
+  }
+
+  .theme-toggle:hover .theme-toggle__thumb,
+  .theme-toggle:active .theme-toggle__thumb {
+    scale: 1;
+  }
+}

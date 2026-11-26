@@ -1,0 +1,125 @@
+---
+import Card from "../Card/Card.astro";
+import Icon from "../Icon/Icon.astro";
+import SectionHeading from "../SectionHeading/SectionHeading.astro";
+import { getAllies, getStats } from "../../data/site";
+import type { Lang } from "../../i18n/ui";
+import { getLocalePath, toLang, useTranslations } from "../../i18n/utils";
+
+interface Props {
+  /** Block language. Defaults to the one detected by Astro. */
+  lang?: Lang;
+}
+
+const { lang: langProp } = Astro.props;
+const lang: Lang = langProp ?? toLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const stats = getStats(lang);
+const allies = getAllies(lang);
+const manifestoHref = getLocalePath(lang, "/manifiesto/");
+---
+
+<section aria-labelledby="contadores-title">
+  <SectionHeading title={t("counters.heading")} id="contadores-title" />
+
+  <p class="mt-1.5 font-display text-lg tracking-wider text-gold-text light:text-gold-text-strong sm:text-xl">
+    #E8C468
+  </p>
+
+  <ul class="mt-7 grid grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-4">
+    {stats.map((stat, index) => (
+      <li class="relative flex flex-col items-center sm:items-start">
+        {index > 0 && (
+          <span
+            class="pointer-events-none absolute -left-2 top-8 hidden select-none font-display text-lg text-night-500 sm:block"
+            aria-hidden="true"
+          >
+            /
+          </span>
+        )}
+        <Icon name={stat.icon} class="mb-2 size-5 text-ember-400" />
+        <span class="stat-number text-4xl leading-none sm:text-[2.1rem] xl:text-[2.7rem]">
+          {stat.value}
+        </span>
+        <span class="mt-1 text-sm text-cream/80">{stat.label}</span>
+      </li>
+    ))}
+  </ul>
+
+  <ul class="mt-8 space-y-3.5">
+    {allies.map((ally) => (
+      <li class="group flex items-center gap-2.5 text-sm sm:text-sm">
+        <Icon name="diamond" class="size-3 shrink-0 text-ember-400" />
+        <span class="truncate text-cream/85">{ally.name}</span>
+        <span class="hidden shrink-0 text-xs text-gold-text-strong md:inline">
+          {ally.tag}
+        </span>
+        <span
+          class="h-px min-w-4 flex-1 bg-night-600 transition-colors group-hover:bg-ember-600/70"
+          aria-hidden="true"
+        ></span>
+        <Icon name="diamond" class="size-2.5 shrink-0 text-ember-500/90" />
+      </li>
+    ))}
+  </ul>
+
+  <div class="mt-7 grid gap-4 sm:grid-cols-2">
+    <Card padding="sm" innerClass="flex h-full flex-col gap-4">
+      <span class="mx-auto bg-gold-surface px-4 py-1.5 font-display text-xs tracking-wide text-on-gold">
+        {t("counters.free")}
+      </span>
+      <p class="text-center text-xs leading-relaxed text-cream/70">
+        {t("counters.freeDescription")}
+      </p>
+      <div class="mt-auto flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pt-1">
+        <span class="font-display text-xs text-cream/60">ULS</span>
+        <span class="font-display text-xs text-cream/60">UCN</span>
+        <span class="font-display text-xs text-cream/60">AWS&nbsp;UG</span>
+        <span class="font-display text-xs text-cream/60">BRÚJULA</span>
+      </div>
+    </Card>
+
+    <Card padding="sm" innerClass="flex h-full flex-col gap-3">
+      <p class="text-center font-display text-sm tracking-wide text-cream">
+        {t("counters.workshops")}
+      </p>
+      <p class="text-center text-xs leading-relaxed text-cream/70">
+        {t("counters.workshopsDescription")}
+      </p>
+      <a
+        href="https://github.com/iv-devs"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mt-auto block border-2 border-on-gold/25 bg-gold-surface px-3 py-2.5 text-center text-sm leading-tight text-on-gold transition-colors hover:bg-gold-300"
+      >
+        <span
+          class="block font-display text-xs uppercase opacity-70"
+          aria-hidden="true"
+        >
+          {t("counters.material")}
+        </span>
+        {t("counters.viewMaterial")} →
+      </a>
+    </Card>
+  </div>
+
+  <Card
+    variant="dim"
+    padding="sm"
+    class="mt-4"
+    innerClass="flex flex-col gap-2"
+  >
+    <p class="font-display text-xs tracking-wider text-gold-text-strong">
+      {t("counters.manifestoTag")}
+    </p>
+    <p class="text-sm leading-relaxed text-cream/80">
+      {t("counters.manifestoQuote")}
+    </p>
+    <a
+      href={manifestoHref}
+      class="inline-flex w-fit items-center gap-2 text-xs text-ember-300 transition-colors hover:text-gold-text-strong"
+    >
+      {t("counters.readManifesto")} →
+    </a>
+  </Card>
+</section>

@@ -1,0 +1,22 @@
+---
+import Card from "../Card/Card.astro";
+import Icon from "../Icon/Icon.astro";
+import { iconMap, type IconName } from "./icons";
+
+const icons = Object.keys(iconMap) as IconName[];
+---
+
+<div class="mx-auto grid w-full max-w-4xl grid-cols-2 gap-4 p-8 sm:grid-cols-3 md:grid-cols-4">
+  {icons.map((name) => (
+    <Card
+      variant="dim"
+      padding="md"
+      innerClass="flex flex-col items-center gap-3"
+    >
+      <Icon name={name} class="size-8 text-ember-400" />
+      <span class="font-display text-xs tracking-wider text-cream/80">
+        {name}
+      </span>
+    </Card>
+  ))}
+</div>

@@ -1,0 +1,47 @@
+{
+  "name": "ivdevs-web",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "bun": ">=1.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check",
+    "check:watch": "astro check --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "validate": "bun run check && bun run lint && bun run format:check",
+    "storybook": "storybook dev",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@lucide/astro": "^1.80.0",
+    "@tailwindcss/vite": "^4.3.5",
+    "@thesvg/astro": "^4.0.18",
+    "astro": "^7.4.13",
+    "tailwindcss": "^4.3.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@eslint/js": "10.0.1",
+    "@storybook-astro/framework": "^1.18.0",
+    "@storybook/addon-docs": "10.6.9",
+    "@storybook/builder-vite": "^10.6.9",
+    "eslint": "10.15.0",
+    "eslint-plugin-astro": "3.2.2",
+    "eslint-plugin-jsx-a11y-x": "0.2.0",
+    "globals": "17.14.0",
+    "prettier": "3.10.1",
+    "prettier-plugin-astro": "1.1.2",
+    "prettier-plugin-tailwindcss": "0.8.1",
+    "storybook": "^10.6.9",
+    "typescript": "^6.0.0",
+    "typescript-eslint": "8.74.0"
+  }
+}

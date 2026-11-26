@@ -1,0 +1,28 @@
+---
+import Icon from "../Icon/Icon.astro";
+import type { IconName } from "../Icon/icons";
+import { eventTones, type EventTone } from "./types";
+
+interface Props {
+  /** Icon that identifies the event. */
+  icon: IconName;
+  /** Thumbnail tone. */
+  tone?: EventTone;
+  /** Additional utility classes. */
+  class?: string;
+}
+
+const { icon, tone = "violet", class: className = "" } = Astro.props;
+---
+
+<div
+  class:list={[
+    "relative grid size-10 shrink-0 place-items-center overflow-hidden border border-line bg-linear-to-br sm:size-11 theme-dark",
+    eventTones[tone],
+    className,
+  ]}
+  aria-hidden="true"
+>
+  <div class="pixel-grid absolute inset-0 opacity-20"></div>
+  <Icon name={icon} class="relative size-5 text-cream/90" />
+</div>

@@ -1,0 +1,34 @@
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: #08060f;
+  color: #f2efe6;
+}
+
+#storybook-root {
+  min-height: 100vh;
+}
+
+/* Stories with a surface take up the full canvas width. */
+#storybook-root:has([data-layout="fullscreen"]),
+#storybook-root:has([data-layout="padded"]) {
+  width: 100%;
+}
+
+/* Centered stories are centered across the whole canvas. */
+#storybook-root:has([data-layout="centered"]) {
+  display: grid;
+  width: 100%;
+  min-height: 100vh;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+/* The canvas background follows the story's theme scope. */
+body:has([data-theme="light"]),
+#storybook-root:has([data-theme="light"]) {
+  background: #f7f5f0;
+}

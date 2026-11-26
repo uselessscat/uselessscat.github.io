@@ -1,0 +1,372 @@
+/* ---------- Sky / background ---------- */
+
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      120% 80% at 50% -20%,
+      #2b2549 0%,
+      #17122a 42%,
+      transparent 75%
+    ),
+    radial-gradient(70% 55% at 12% 30%, #201a3a 0%, transparent 70%),
+    radial-gradient(60% 45% at 88% 22%, #251c40 0%, transparent 72%),
+    linear-gradient(180deg, #0d0a18 0%, #0a0813 55%, #08060f 100%);
+}
+
+.sky__nebula {
+  position: absolute;
+  inset: -8% -10% auto -10%;
+  height: 72%;
+  background:
+    radial-gradient(
+      42% 48% at 63% 30%,
+      rgb(121 101 182 / 0.34) 0%,
+      transparent 68%
+    ),
+    radial-gradient(
+      32% 38% at 30% 20%,
+      rgb(80 68 143 / 0.28) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      26% 28% at 80% 12%,
+      rgb(232 196 104 / 0.08) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 26% at 48% 60%,
+      rgb(74 58 120 / 0.18) 0%,
+      transparent 72%
+    );
+  filter: blur(14px);
+  transform: rotate(-6deg);
+}
+
+.sky__stars {
+  position: absolute;
+  inset: -10%;
+  background-repeat: no-repeat;
+  animation: twinkle 8s steps(3, end) infinite;
+}
+
+.sky__stars--a {
+  background-image:
+    radial-gradient(
+      1.5px 1.5px at 8% 14%,
+      rgb(255 255 255 / 0.9) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1px 1px at 17% 42%,
+      rgb(255 255 255 / 0.7) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      2px 2px at 24% 9%,
+      rgb(255 255 255 / 0.85) 40%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1px 1px at 31% 26%,
+      rgb(255 255 255 / 0.55) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1.5px 1.5px at 39% 52%,
+      rgb(255 236 214 / 0.8) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1px 1px at 44% 18%,
+      rgb(255 255 255 / 0.6) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      2px 2px at 53% 8%,
+      rgb(255 255 255 / 0.95) 40%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1px 1px at 58% 34%,
+      rgb(255 255 255 / 0.5) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1.5px 1.5px at 66% 21%,
+      rgb(255 255 255 / 0.8) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1px 1px at 71% 47%,
+      rgb(255 255 255 / 0.55) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      2px 2px at 79% 12%,
+      rgb(255 250 235 / 0.9) 40%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1px 1px at 86% 31%,
+      rgb(255 255 255 / 0.6) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1.5px 1.5px at 93% 19%,
+      rgb(255 255 255 / 0.75) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1px 1px at 12% 68%,
+      rgb(255 255 255 / 0.45) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1px 1px at 28% 74%,
+      rgb(255 255 255 / 0.4) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1.5px 1.5px at 48% 66%,
+      rgb(255 255 255 / 0.6) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1px 1px at 69% 71%,
+      rgb(255 255 255 / 0.4) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1px 1px at 88% 63%,
+      rgb(255 255 255 / 0.5) 45%,
+      transparent 55%
+    );
+}
+
+.sky__stars--b {
+  background-image:
+    radial-gradient(
+      1px 1px at 5% 28%,
+      rgb(255 255 255 / 0.6) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      2px 2px at 21% 16%,
+      rgb(255 255 255 / 0.7) 40%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1px 1px at 36% 37%,
+      rgb(255 255 255 / 0.45) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1.5px 1.5px at 49% 23%,
+      rgb(255 255 255 / 0.65) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1px 1px at 62% 49%,
+      rgb(255 255 255 / 0.4) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      2px 2px at 74% 29%,
+      rgb(255 255 255 / 0.7) 40%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1px 1px at 84% 44%,
+      rgb(255 255 255 / 0.45) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1.5px 1.5px at 95% 36%,
+      rgb(255 255 255 / 0.6) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1px 1px at 15% 57%,
+      rgb(255 255 255 / 0.45) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1px 1px at 33% 61%,
+      rgb(255 255 255 / 0.4) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1.5px 1.5px at 55% 58%,
+      rgb(255 255 255 / 0.5) 45%,
+      transparent 55%
+    ),
+    radial-gradient(
+      1px 1px at 77% 61%,
+      rgb(255 255 255 / 0.4) 45%,
+      transparent 55%
+    );
+  animation-delay: -4s;
+  animation-duration: 11s;
+  opacity: 0.75;
+}
+
+.sky__flare {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #fff;
+  box-shadow: 0 0 10px 2px rgb(255 255 255 / 0.55);
+}
+
+.sky__flare::before,
+.sky__flare::after {
+  content: "";
+  position: absolute;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgb(255 255 255 / 0.75),
+    transparent
+  );
+}
+
+.sky__flare::before {
+  left: 1px;
+  top: -14px;
+  width: 1px;
+  height: 31px;
+}
+
+.sky__flare::after {
+  top: 1px;
+  left: -14px;
+  height: 1px;
+  width: 31px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(255 255 255 / 0.75),
+    transparent
+  );
+}
+
+.sky__flare--1 {
+  top: 11%;
+  left: 71%;
+}
+
+.sky__flare--2 {
+  top: 26%;
+  left: 18%;
+  transform: scale(0.6);
+  opacity: 0.65;
+}
+
+.sky__flare--3 {
+  top: 7%;
+  left: 40%;
+  transform: scale(0.45);
+  opacity: 0.5;
+}
+
+.sky__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.sky__vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      115% 90% at 50% 35%,
+      transparent 55%,
+      rgb(5 3 10 / 0.55) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgb(5 3 10 / 0.25) 0%,
+      transparent 18%,
+      transparent 82%,
+      rgb(5 3 10 / 0.6) 100%
+    );
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky__stars {
+    animation: none;
+  }
+}
+
+/* ---------- Light sky: daytime valley ---------- */
+
+[data-theme="light"] .sky {
+  background:
+    radial-gradient(
+      120% 52% at 50% 112%,
+      rgb(196 85 45 / 0.08) 0%,
+      transparent 64%
+    ),
+    radial-gradient(
+      120% 82% at 50% -18%,
+      #fffdf8 0%,
+      #f7f5f0 46%,
+      transparent 77%
+    ),
+    radial-gradient(
+      72% 52% at 14% 26%,
+      rgb(232 196 104 / 0.05) 0%,
+      transparent 72%
+    ),
+    radial-gradient(
+      58% 44% at 88% 20%,
+      rgb(196 85 45 / 0.035) 0%,
+      transparent 72%
+    ),
+    linear-gradient(180deg, #f8f6f1 0%, #f7f5f0 58%, #f2ede3 100%);
+}
+
+[data-theme="light"] .sky__nebula,
+[data-theme="light"] .sky__stars,
+[data-theme="light"] .sky__flare {
+  display: none;
+}
+
+[data-theme="light"] .sky__grain {
+  opacity: 0.028;
+  mix-blend-mode: multiply;
+}
+
+[data-theme="light"] .sky__vignette {
+  background:
+    radial-gradient(
+      130% 105% at 50% 0%,
+      transparent 58%,
+      rgb(11 16 38 / 0.045) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgb(247 245 240 / 0.35) 0%,
+      transparent 16%,
+      transparent 70%,
+      rgb(11 16 38 / 0.04) 100%
+    );
+}

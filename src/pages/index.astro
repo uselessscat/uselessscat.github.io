@@ -1,0 +1,46 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav/Nav.astro";
+import Hero from "../components/Hero/Hero.astro";
+import NextMeetup from "../components/NextMeetup/NextMeetup.astro";
+import Counters from "../components/Counters/Counters.astro";
+import PastEvents from "../components/PastEvents/PastEvents.astro";
+import Timeline from "../components/Timeline/Timeline.astro";
+import Footer from "../components/Footer/Footer.astro";
+import { useTranslations } from "../i18n/utils";
+
+const lang = "es";
+const t = useTranslations(lang);
+---
+
+<Layout lang={lang}>
+  <Nav lang={lang} />
+
+  <main id="contenido" class="flex-1">
+    <Hero lang={lang} />
+
+    <section
+      id="eventos"
+      class="mx-auto max-w-7xl px-5 pt-10 sm:px-8 sm:pt-12"
+      aria-label={t("home.eventsAria")}
+    >
+      <div class="grid gap-y-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-x-14 xl:gap-x-20">
+        <div class="min-w-0 lg:col-start-1 lg:row-start-1">
+          <NextMeetup lang={lang} />
+        </div>
+
+        <div class="min-w-0 lg:col-start-2 lg:row-span-2 lg:row-start-1">
+          <Counters lang={lang} />
+        </div>
+
+        <div class="min-w-0 lg:col-start-1 lg:row-start-2">
+          <PastEvents lang={lang} />
+        </div>
+      </div>
+
+      <Timeline lang={lang} />
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</Layout>

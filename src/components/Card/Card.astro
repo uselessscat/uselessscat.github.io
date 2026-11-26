@@ -1,0 +1,38 @@
+---
+import "./Card.css";
+
+type CardVariant = "default" | "dim" | "gold" | "glow";
+type CardPadding = "none" | "sm" | "md" | "lg";
+type CardTag = "div" | "article" | "section" | "aside" | "li";
+
+interface Props {
+  variant?: CardVariant;
+  padding?: CardPadding;
+  as?: CardTag;
+  class?: string;
+  innerClass?: string;
+}
+
+const {
+  variant = "default",
+  padding = "none",
+  as: Tag = "div",
+  class: className = "",
+  innerClass = "",
+} = Astro.props;
+
+const paddings: Record<CardPadding, string> = {
+  none: "",
+  sm: "p-4",
+  md: "p-5",
+  lg: "p-5 sm:p-6",
+};
+---
+
+<Tag
+  class:list={["card", variant !== "default" && `card--${variant}`, className]}
+>
+  <div class:list={["card__inner", paddings[padding], innerClass]}>
+    <slot />
+  </div>
+</Tag>

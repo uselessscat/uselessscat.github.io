@@ -1,0 +1,42 @@
+---
+import Card from "../Card/Card.astro";
+import EventThumb from "../EventThumb/EventThumb.astro";
+import SectionHeading from "../SectionHeading/SectionHeading.astro";
+import { getPastEvents } from "../../data/site";
+import type { Lang } from "../../i18n/ui";
+import { toLang, useTranslations } from "../../i18n/utils";
+
+interface Props {
+  /** Section language. Detected from Astro by default. */
+  lang?: Lang;
+}
+
+const { lang: langProp } = Astro.props;
+const lang: Lang = langProp ?? toLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const pastEvents = getPastEvents(lang);
+---
+
+<section aria-labelledby="pasados-title">
+  <SectionHeading title={t("pastEvents.heading")} id="pasados-title" />
+
+  <Card variant="dim" class="theme-dark mt-4">
+    <ul class="divide-y divide-line px-4 sm:px-5">
+      {pastEvents.map((event) => (
+        <li class="flex items-center gap-3.5 py-3.5">
+          <EventThumb icon={event.icon} tone={event.tone} />
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-sm text-cream sm:text-base">
+              {event.title}
+            </p>
+            <p class="mt-0.5 text-xs text-dim">{event.meta}</p>
+          </div>
+          <span class="shrink-0 bg-gold-surface px-2 py-1.5 font-display text-xs leading-none text-on-gold sm:text-xs">
+            {event.date}
+          </span>
+        </li>
+      ))}
+    </ul>
+    <div class="hazard h-7" aria-hidden="true"></div>
+  </Card>
+</section>

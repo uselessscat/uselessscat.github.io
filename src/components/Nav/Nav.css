@@ -1,0 +1,54 @@
+.iv-nav .nav-link {
+  position: relative;
+}
+
+.iv-nav .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -7px;
+  height: 2px;
+  background: var(--color-ember-400);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.18s steps(3, end);
+}
+
+.iv-nav .nav-link:hover::after,
+.iv-nav .nav-link[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+@media (min-width: 1024px) {
+  .iv-nav [data-menu-toggle] {
+    display: none;
+  }
+}
+
+.iv-nav .menu-icon {
+  display: flex;
+  width: 18px;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.iv-nav .menu-icon span {
+  height: 2px;
+  background: currentColor;
+  transition:
+    transform 0.2s steps(3, end),
+    opacity 0.2s steps(3, end);
+}
+
+.iv-nav [aria-expanded="true"] .menu-icon span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.iv-nav [aria-expanded="true"] .menu-icon span:nth-child(2) {
+  opacity: 0;
+}
+
+.iv-nav [aria-expanded="true"] .menu-icon span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}

@@ -1,0 +1,99 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav/Nav.astro";
+import ContentPage from "../components/ContentPage/ContentPage.astro";
+import Footer from "../components/Footer/Footer.astro";
+import { getSite } from "../data/site";
+
+const lang = "es";
+const site = getSite(lang);
+---
+
+<Layout
+  lang={lang}
+  title="CÓDIGO DE CONDUCTA — IV Devs"
+  description="Normas de convivencia de IV Devs: un espacio seguro, inclusivo y respetuoso para todas las personas."
+>
+  <Nav lang={lang} />
+
+  <ContentPage lang={lang} title="CÓDIGO DE CONDUCTA" eyebrow="// CONVIVENCIA">
+    <p>
+      Uno de los objetivos principales de IV Devs es ser{" "}
+      <strong>inclusiva</strong> para el mayor número de contribuyentes, con la
+      mayor diversidad de orígenes posible. Estamos comprometidos a proporcionar
+      un ambiente agradable, seguro y acogedor para todos, independientemente de
+      su sexo, orientación sexual, capacidad, etnia, nivel socioeconómico y
+      religión.
+    </p>
+    <p>
+      Este código resume nuestras expectativas para todos los que participan en
+      la comunidad, así como las consecuencias del comportamiento inaceptable.
+    </p>
+
+    <h2>Comportamiento esperado</h2>
+    <ul>
+      <li>Participa de manera auténtica y activa.</li>
+      <li>
+        Ejercita la consideración y el respeto en tus comunicaciones y acciones.
+      </li>
+      <li>Intenta colaborar en lugar de generar conflicto.</li>
+      <li>
+        Sé consciente de tu entorno y de las demás personas participantes.
+      </li>
+      <li>
+        Alerta a los organizadores si notas una situación de riesgo o una
+        violación de este código.
+      </li>
+    </ul>
+
+    <h2>Comportamiento inaceptable</h2>
+    <p>
+      No toleramos la intimidación, el acoso, el abuso, la discriminación ni la
+      comunicación despectiva, ya sea en internet o en cualquiera de nuestros
+      eventos. El acoso incluye comentarios nocivos relacionados con género,
+      orientación sexual, raza, religión o discapacidad; imágenes sexuales en
+      espacios públicos; intimidación deliberada; seguimiento; fotografías o
+      grabaciones no consentidas; interrupción sostenida de charlas; contacto
+      físico inapropiado y atención sexual no deseada.
+    </p>
+
+    <h2>Consecuencias</h2>
+    <p>
+      Se espera que las personas a las que se les solicite detener su
+      comportamiento inaceptable lo hagan de manera inmediata. Los organizadores
+      pueden tomar cualquier acción que consideren apropiada, incluida una
+      prohibición temporal o la expulsión permanente de la comunidad.
+    </p>
+
+    <h2>Si eres testigo o víctima</h2>
+    <p>
+      Comunícate con un organizador del meetup lo antes posible o escríbenos a
+      <a href={`mailto:${site.email}`}>{site.email}</a>. Si un organizador crea
+      una situación inadecuada, será juzgado con un estándar más alto.
+    </p>
+
+    <h2>Moderación</h2>
+    <p>
+      Los organizadores responderán primero con una advertencia. Si la
+      advertencia es ignorada, la persona será expulsada del canal para que
+      reflexione, o deberá retirarse del lugar por 30 minutos en caso de eventos
+      presenciales. Si vuelve y continúa causando problemas, será expulsada del
+      grupo, evento o Slack de forma indefinida.
+    </p>
+
+    <h2>Alcance</h2>
+    <p>
+      Esperamos que todos los participantes se atengan a este código en todos
+      los espacios virtuales y presenciales de la comunidad. Cuidémonos: no
+      basta con mostrar excelencia técnica, también hay que ser la mejor persona
+      posible.
+    </p>
+
+    <p class="text-sm text-dim">
+      Adaptado del Código de Conducta de la comunidad y distribuido bajo
+      licencia Creative Commons BY-SA.
+    </p>
+  </ContentPage>
+
+  <Footer lang={lang} />
+</Layout>

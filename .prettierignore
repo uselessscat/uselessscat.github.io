@@ -1,0 +1,11 @@
+# build output
+dist/
+storybook-static/
+.astro/
+node_modules/
+
+# lockfiles
+bun.lock
+
+# static assets
+public/

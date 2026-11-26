@@ -1,0 +1,120 @@
+---
+import { Font } from "astro:assets";
+import "../styles/global.css";
+import Sky from "../components/Sky/Sky.astro";
+import "../i18n/astro";
+import type { Lang } from "../i18n/ui";
+import {
+  getLangFromUrl,
+  getLocaleSwitcherHref,
+  getPathWithoutLocale,
+  toLang,
+  useTranslations,
+} from "../i18n/utils";
+
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: Lang;
+}
+
+const { lang: langProp } = Astro.props;
+const localeFromAstro = Astro.currentLocale;
+const lang: Lang =
+  langProp ??
+  (localeFromAstro ? toLang(localeFromAstro) : getLangFromUrl(Astro.url));
+
+const t = useTranslations(lang);
+
+const { title = t("layout.title"), description = t("layout.description") } =
+  Astro.props;
+
+const siteUrl = Astro.site ?? new URL(Astro.url.origin);
+const absoluteUrl = (path: string) => new URL(path, siteUrl).href;
+
+const pathWithoutLocale = getPathWithoutLocale(Astro.url.pathname);
+const alternateUrls = {
+  es: absoluteUrl(getLocaleSwitcherHref("es", pathWithoutLocale)),
+  en: absoluteUrl(getLocaleSwitcherHref("en", pathWithoutLocale)),
+};
+
+const ogLocale = lang === "es" ? "es_CL" : "en_US";
+const ogLocaleAlternate = lang === "es" ? "en_US" : "es_CL";
+---
+
+<!doctype html>
+<html lang={lang} data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#08060f" />
+    <meta name="color-scheme" content="dark light" />
+    <script is:inline>
+      (() => {
+        const STORAGE_KEY = "ivdevs-theme";
+        const root = document.documentElement;
+        let theme = null;
+
+        try {
+          const stored = localStorage.getItem(STORAGE_KEY);
+          if (stored === "dark" || stored === "light") theme = stored;
+        } catch {
+          /* localStorage may be blocked: continue with the system setting. */
+        }
+
+        if (!theme) {
+          theme = window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark";
+        }
+
+        root.dataset.theme = theme;
+        root.style.colorScheme = theme;
+
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta)
+          meta.setAttribute(
+            "content",
+            theme === "light" ? "#F7F5F0" : "#08060f",
+          );
+      })();
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="canonical" href={Astro.url} />
+    <link rel="alternate" hreflang="es" href={alternateUrls.es} />
+    <link rel="alternate" hreflang="en" href={alternateUrls.en} />
+    <link rel="alternate" hreflang="x-default" href={alternateUrls.es} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="IV Devs" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={ogLocaleAlternate} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <Font cssVariable="--font-pixel-family" preload />
+    <Font cssVariable="--font-display-family" preload />
+    <Font cssVariable="--font-arcade-family" preload />
+
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">
+      {t("a11y.skipToContent")}
+    </a>
+
+    <Sky />
+
+    <div class="relative z-10 flex min-h-screen flex-col">
+      <slot />
+    </div>
+  </body>
+</html>

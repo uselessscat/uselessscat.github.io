@@ -1,0 +1,94 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Nav from "../../components/Nav/Nav.astro";
+import ContentPage from "../../components/ContentPage/ContentPage.astro";
+import Footer from "../../components/Footer/Footer.astro";
+import { getSite } from "../../data/site";
+
+const lang = "en";
+const site = getSite(lang);
+---
+
+<Layout
+  lang={lang}
+  title="CODE OF CONDUCT — IV Devs"
+  description="IV Devs community guidelines: a safe, inclusive, and respectful space for everyone."
+>
+  <Nav lang={lang} />
+
+  <ContentPage lang={lang} title="CODE OF CONDUCT" eyebrow="// CONDUCT">
+    <p>
+      One of IV Devs' main goals is to be <strong>inclusive</strong> for as many
+      contributors as possible, with the greatest diversity of backgrounds. We
+      are committed to providing a pleasant, safe, and welcoming environment for
+      everyone, regardless of sex, sexual orientation, ability, ethnicity,
+      socioeconomic status, and religion.
+    </p>
+    <p>
+      This code summarizes our expectations for everyone who participates in the
+      community, as well as the consequences of unacceptable behavior.
+    </p>
+
+    <h2>Expected behavior</h2>
+    <ul>
+      <li>Participate authentically and actively.</li>
+      <li>
+        Practice consideration and respect in your communications and actions.
+      </li>
+      <li>Try to collaborate instead of creating conflict.</li>
+      <li>Be aware of your surroundings and of other participants.</li>
+      <li>
+        Alert the organizers if you notice a risky situation or a violation of
+        this code.
+      </li>
+    </ul>
+
+    <h2>Unacceptable behavior</h2>
+    <p>
+      We do not tolerate intimidation, harassment, abuse, discrimination, or
+      derogatory communication, whether online or at any of our events.
+      Harassment includes harmful comments related to gender, sexual
+      orientation, race, religion, or disability; sexual images in public
+      spaces; deliberate intimidation; stalking; non-consensual photography or
+      recording; sustained interruption of talks; inappropriate physical contact
+      and unwelcome sexual attention.
+    </p>
+
+    <h2>Consequences</h2>
+    <p>
+      Anyone asked to stop unacceptable behavior is expected to do so
+      immediately. Organizers may take any action they deem appropriate,
+      including a temporary ban or permanent expulsion from the community.
+    </p>
+
+    <h2>If you witness or experience something</h2>
+    <p>
+      Contact a meetup organizer as soon as possible or email us at
+      <a href={`mailto:${site.email}`}>{site.email}</a>. If an organizer creates
+      an inappropriate situation, they will be held to a higher standard.
+    </p>
+
+    <h2>Moderation</h2>
+    <p>
+      Organizers will respond first with a warning. If the warning is ignored,
+      the person will be removed from the channel to reflect, or asked to leave
+      the venue for 30 minutes at in-person events. If they return and continue
+      causing problems, they will be indefinitely removed from the group, event,
+      or Slack.
+    </p>
+
+    <h2>Scope</h2>
+    <p>
+      We expect all participants to follow this code in every virtual and
+      in-person space of the community. Let's take care of each other: technical
+      excellence is not enough, we also have to be the best person we can be.
+    </p>
+
+    <p class="text-sm text-dim">
+      Adapted from the community Code of Conduct and distributed under the
+      Creative Commons BY-SA license.
+    </p>
+  </ContentPage>
+
+  <Footer lang={lang} />
+</Layout>

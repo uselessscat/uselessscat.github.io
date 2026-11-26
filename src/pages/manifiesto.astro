@@ -1,0 +1,82 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav/Nav.astro";
+import ContentPage from "../components/ContentPage/ContentPage.astro";
+import Footer from "../components/Footer/Footer.astro";
+
+const lang = "es";
+---
+
+<Layout
+  lang={lang}
+  title="MANIFIESTO — IV Devs"
+  description="Los valores que mueven a IV Devs: respeto, buena fe, colaboración y ganas de compartir conocimiento en la IV Región."
+>
+  <Nav lang={lang} />
+
+  <ContentPage lang={lang} title="MANIFIESTO" eyebrow="// COMUNIDAD">
+    <p>
+      Todos quienes forman parte de esta comunidad creen firmemente que en el
+      interior de cada persona existe un <strong>potencial inigualable</strong>{" "}
+      para crear y afectar positivamente a quienes nos rodean. Más aún cuando
+      esa capacidad se suma a la de otros:{" "}
+      <strong>el todo es más que la suma de las partes</strong>.
+    </p>
+
+    <h2>Somos respetuosos</h2>
+    <p>
+      En una comunidad existen diversas opiniones y puntos de vista. Siempre las
+      aceptamos con respeto.
+    </p>
+
+    <h2>Tenemos buena fe</h2>
+    <p>
+      Las contribuciones de los demás miembros son tan importantes como las
+      nuestras, y tienen tan buena intención como las nuestras.
+    </p>
+
+    <h2>Somos colaboradores</h2>
+    <p>
+      Siempre hay algo que aprender en cada nueva aventura. Por eso estamos
+      dispuestos a colaborar con los demás en sus proyectos.
+    </p>
+
+    <h2>Somos abiertos</h2>
+    <p>
+      No hay nada que ocultar: si tenemos dificultades o problemas, pedimos
+      ayuda.
+    </p>
+
+    <h2>Compartimos y disfrutamos</h2>
+    <p>
+      Disfrutamos cada línea de código porque sabemos que puede cambiar el
+      mundo. El conocimiento es libre: nuestro trabajo, experiencia y resultados
+      están a disposición de la comunidad.
+    </p>
+
+    <h2>Somos inquietos y motivados</h2>
+    <p>
+      Por hacer mejor las cosas, por romper el ciclo, ser disruptivos, enérgicos
+      y críticos del entorno, pero siempre siendo motivadores del cambio.
+    </p>
+
+    <h2>Nuestro compromiso</h2>
+    <ul>
+      <li>Permanecer abiertos y transparentes.</li>
+      <li>Contribuir al desarrollo profesional de nuestros miembros.</li>
+      <li>No ocultar los problemas: resolverlos entre todos.</li>
+      <li>
+        Ser inclusivos: son las diferencias las que nos hacen una comunidad
+        única.
+      </li>
+    </ul>
+
+    <p>
+      Cuando nos comunicamos mantenemos la cortesía y el respeto, evitamos las
+      discusiones sin sentido, respondemos siempre —a veces tarde, pero siempre—
+      y jamás hacemos spam.
+    </p>
+  </ContentPage>
+
+  <Footer lang={lang} />
+</Layout>

@@ -1,0 +1,29 @@
+---
+interface Props {
+  /** Section title text. */
+  title: string;
+  /** Heading id used to link with `aria-labelledby`. */
+  id?: string;
+  /** Additional utility classes. */
+  class?: string;
+  /** Shows the decorative pixel line on the right. */
+  line?: boolean;
+}
+
+const { title, id, class: className = "", line = true } = Astro.props;
+---
+
+<div class:list={["flex items-center gap-4", className]}>
+  <h2
+    id={id}
+    class="shrink-0 font-display text-lg leading-none tracking-wide text-cream sm:text-xl md:text-2xl"
+  >
+    {title}
+  </h2>
+  {line && (
+    <span class="flex flex-1 items-center gap-1.5" aria-hidden="true">
+      <span class="h-px flex-1 bg-linear-to-r from-ember-600/80 via-night-500/80 to-transparent" />
+      <span class="size-1.5 bg-ember-500/80" />
+    </span>
+  )}
+</div>

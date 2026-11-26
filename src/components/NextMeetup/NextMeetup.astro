@@ -1,0 +1,80 @@
+---
+import Card from "../Card/Card.astro";
+import Icon from "../Icon/Icon.astro";
+import SectionHeading from "../SectionHeading/SectionHeading.astro";
+import { getMeetup } from "../../data/site";
+import type { Lang } from "../../i18n/ui";
+import { toLang, useTranslations } from "../../i18n/utils";
+
+interface Props {
+  /** Section language. Detected from Astro by default. */
+  lang?: Lang;
+}
+
+const { lang: langProp } = Astro.props;
+const lang: Lang = langProp ?? toLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const meetup = getMeetup(lang);
+---
+
+<section aria-labelledby="meetup-title">
+  <SectionHeading title={t("meetup.heading")} id="meetup-title" />
+
+  <Card variant="glow" padding="lg" class="theme-dark mt-4">
+    <div class="flex items-start justify-between gap-3">
+      <span class="font-display text-xs tracking-wider text-gold-text">
+        {meetup.kicker}
+      </span>
+      <span class="flex items-center gap-1.5 text-xs text-cream/65">
+        <span
+          class="size-2 animate-pulse bg-ember-400"
+          aria-hidden="true"
+        ></span>
+        {meetup.status}
+      </span>
+    </div>
+
+    <h3 class="mt-4 text-xl leading-tight text-cream sm:text-2xl">
+      {meetup.title}
+    </h3>
+
+    <ul class="mt-5 space-y-3 text-sm text-cream/85 sm:text-base">
+      <li class="flex items-center gap-3">
+        <Icon name="calendar" class="size-4 shrink-0 text-ember-400" />
+        <span>{meetup.date}</span>
+      </li>
+      <li class="flex items-center gap-3">
+        <Icon name="pin" class="size-4 shrink-0 text-ember-400" />
+        <span>{meetup.place}</span>
+      </li>
+      <li class="flex items-center gap-3">
+        <Icon name="ticket" class="size-4 shrink-0 text-ember-400" />
+        <span>{t("meetup.freeEntry")}</span>
+      </li>
+    </ul>
+
+    <div class="mt-6 flex items-center justify-between gap-4">
+      <a
+        href={meetup.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group inline-flex items-center gap-2.5 text-base text-ember-300 transition-colors hover:text-gold-text-strong sm:text-lg"
+      >
+        <Icon
+          name="arrow"
+          class="size-3.5 transition-transform duration-150 group-hover:translate-x-1"
+        />
+        <span class="border-b border-dashed border-ember-400/40 pb-0.5">
+          {t("meetup.signUp")}
+        </span>
+        <span class="sr-only">{t("meetup.opensNewTab")}</span>
+      </a>
+
+      <span class="hidden font-display text-xs leading-relaxed text-dim sm:block sm:text-right">
+        {t("meetup.time")}
+        <br />
+        {t("meetup.timezone")}
+      </span>
+    </div>
+  </Card>
+</section>

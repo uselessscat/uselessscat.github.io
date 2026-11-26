@@ -1,0 +1,63 @@
+---
+import ZigZag from "../ZigZag/ZigZag.astro";
+import Icon from "../Icon/Icon.astro";
+import { getSite } from "../../data/site";
+import type { Lang } from "../../i18n/ui";
+import { toLang, useTranslations } from "../../i18n/utils";
+
+interface Props {
+  /** Section language. Detected from Astro by default. */
+  lang?: Lang;
+}
+
+const { lang: langProp } = Astro.props;
+const lang: Lang = langProp ?? toLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const site = getSite(lang);
+---
+
+<section
+  id={lang === "es" ? "inicio" : "home"}
+  class="relative overflow-hidden pb-8 pt-12 sm:pt-16 md:pb-12"
+>
+  <div
+    class="hero-glow pointer-events-none absolute left-1/2 top-2 -z-10 h-104 w-208 max-w-[140vw] -translate-x-1/2 rounded-full blur-2xl"
+    aria-hidden="true"
+  ></div>
+
+  <Icon
+    name="sparkle"
+    class="absolute left-[12%] top-[44%] hidden size-4 text-cream/35 light:hidden sm:block"
+  />
+  <Icon
+    name="sparkle"
+    class="absolute right-[14%] top-[30%] hidden size-3 text-gold-400/50 light:hidden sm:block"
+  />
+  <Icon
+    name="diamond"
+    class="absolute right-[9%] top-[62%] hidden size-4 text-ember-400/50 lg:block"
+  />
+
+  <div class="mx-auto max-w-4xl px-5 text-center">
+    <h1 class="font-arcade text-[clamp(1.4rem,5.6vw,5rem)] leading-[1.15] text-cream [text-shadow:0_0_38px_rgba(229,113,76,0.18),4px_4px_0_rgba(6,4,12,0.75)] light:[text-shadow:3px_3px_0_rgba(11,16,38,0.06)]">
+      &lt;<span class="text-ember-500">IV </span>DEVS/&gt;
+    </h1>
+
+    <p class="mx-auto mt-5 max-w-3xl text-balance text-[1.1rem] leading-snug text-cream/90 sm:text-xl md:text-2xl">
+      {site.tagline}
+    </p>
+
+    <div class="mt-8 flex justify-center">
+      <a
+        class="pixel-btn px-4 py-3 text-base sm:px-9 sm:text-2xl"
+        href={site.whatsapp}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        &gt;{t("hero.cta")}
+      </a>
+    </div>
+  </div>
+
+  <ZigZag class="mx-auto mt-12 w-24 sm:w-32 md:mt-14 md:w-40" />
+</section>
