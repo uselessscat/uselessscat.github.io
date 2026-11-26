@@ -19,7 +19,7 @@ bun run dev        # local site
 bun run storybook  # component workshop
 ```
 
-Other scripts live in `package.json`. Run `bun run validate` (type check + lint + format check) before opening a PR; CI runs the same checks (`.github/workflows/quality-checks.yml`).
+Other scripts live in `package.json`. Run `bun run validate` (i18n check + type check + lint + format check) before opening a PR; CI runs the same checks (`.github/workflows/quality-checks.yml`).
 
 ## Project layout
 
@@ -35,7 +35,7 @@ Other scripts live in `package.json`. Run `bun run validate` (type check + lint 
 
 ## Content and translations
 
-Site content lives in `src/data/site.ts`; data that depends on the language is read through its getters. UI strings are in `src/i18n/ui.ts`, and localized routes/anchors are mapped in `src/i18n/utils.ts`. New pages go in `src/pages/` and usually compose `Layout`, `Nav`, `ContentPage` and `Footer`.
+Site content lives in `src/data/site.ts`; data that depends on the language is read through its getters. UI strings are split per language and typed. Spanish is the source of truth: add a key there first, and `astro check` will fail if `en` is missing it or defines an extra one. `bun run i18n:check` also reports empty strings, mismatched `{placeholders}` and unused keys (`bun run i18n:check -- --strict` fails on unused keys, useful for cleanup). Localized routes/anchors are mapped in `src/i18n/utils.ts`. New pages go in `src/pages/` and usually compose `Layout`, `Nav`, `ContentPage` and `Footer`.
 
 ## Design and theming
 
