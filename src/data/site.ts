@@ -1,11 +1,10 @@
 // Editable site content. Change these values without touching the components.
 // Data that depends on the language lives in `contentByLang` and is read through
-// the getters (`getSite`, `getNavLinks`, ...).
+// the getters (`getSite`, `getMeetup`, ...).
 import type { EventTone } from "../components/EventThumb/types";
 import type { IconName } from "../components/Icon/icons";
 import type { SocialIconName } from "../components/SocialIcon/icons";
-import { type Lang, type UIKey } from "../i18n/ui";
-import { getLocalePath, useTranslations } from "../i18n/utils";
+import { type Lang } from "../i18n/ui";
 
 export interface Site {
   name: string;
@@ -15,11 +14,6 @@ export interface Site {
   location: string;
   whatsapp: string;
   meetup: string;
-}
-
-export interface NavLink {
-  label: string;
-  href: string;
 }
 
 export interface Meetup {
@@ -234,24 +228,6 @@ export function getPastEvents(lang: Lang): PastEvent[] {
 /** Community milestones. */
 export function getTimeline(lang: Lang): TimelineItem[] {
   return contentByLang[lang].timeline;
-}
-
-const navItems: { key: UIKey; href: string }[] = [
-  { key: "nav.home", href: "/#inicio" },
-  { key: "nav.manifesto", href: "/manifiesto/" },
-  { key: "nav.codeOfConduct", href: "/codigo/" },
-  { key: "nav.events", href: "/#eventos" },
-  { key: "nav.blog", href: "/blog/" },
-  { key: "nav.press", href: "/prensa/" },
-];
-
-/** Navigation links with localized label and path. */
-export function getNavLinks(lang: Lang): NavLink[] {
-  const t = useTranslations(lang);
-  return navItems.map(({ key, href }) => ({
-    label: t(key),
-    href: getLocalePath(lang, href),
-  }));
 }
 
 // Check that each social link points to the current official account.

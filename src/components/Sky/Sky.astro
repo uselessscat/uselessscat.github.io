@@ -1,16 +1,164 @@
 ---
 import "./Sky.css";
+
+const createStars = (seed: number, count: number, maxSize: number) => {
+  let state = seed;
+  const random = () => {
+    state = (state * 1664525 + 1013904223) >>> 0;
+    return state / 4294967296;
+  };
+
+  return Array.from({ length: count }, () => ({
+    x: Math.round(random() * 1600),
+    y: Math.round(random() * 1000),
+    size: Number((0.8 + random() * maxSize).toFixed(1)),
+    opacity: Number((0.3 + random() * 0.65).toFixed(2)),
+  }));
+};
+
+const starLayers = [
+  { name: "far", stars: createStars(29, 64, 1.2) },
+  { name: "mid", stars: createStars(71, 38, 1.8) },
+  { name: "near", stars: createStars(2519, 22, 2.4) },
+];
 ---
 
-<div class="sky" aria-hidden="true">
+<div class="sky" data-sky aria-hidden="true">
+  <div class="sky__night"></div>
+  <div class="sky__daylight"></div>
   <div class="sky__nebula"></div>
-  <div class="sky__stars sky__stars--a"></div>
-  <div class="sky__stars sky__stars--b"></div>
-  <span class="sky__flare sky__flare--1"></span>
-  <span class="sky__flare sky__flare--2"></span>
-  <span class="sky__flare sky__flare--3"></span>
-  <div class="sky__day"></div>
-  <div class="sky__grain"></div>
-  <div class="sky__vignette sky__vignette--night"></div>
-  <div class="sky__vignette sky__vignette--day"></div>
+  <div class="sky__stars">
+    {starLayers.map((layer) => (
+      <div class={`sky__star-layer sky__star-layer--${layer.name}`}>
+        <svg
+          viewBox="0 0 1600 1000"
+          preserveAspectRatio="xMidYMid slice"
+          role="presentation"
+        >
+          <g class={`sky__star-twinkle sky__star-twinkle--${layer.name}`}>
+            {layer.stars.map((star) => (
+              <rect
+                x={star.x}
+                y={star.y}
+                width={star.size}
+                height={star.size}
+                opacity={star.opacity}
+                fill="currentColor"
+              />
+            ))}
+          </g>
+        </svg>
+      </div>
+    ))}
+
+    <div class="sky__flares">
+      <span class="sky__flare sky__flare--1"></span>
+      <span class="sky__flare sky__flare--2"></span>
+      <span class="sky__flare sky__flare--3"></span>
+    </div>
+  </div>
 </div>
+
+<script>
+  const sky = document.querySelector<HTMLElement>("[data-sky]");
+
+  if (sky) {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const precisePointer = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    );
+
+    const getAll = <T extends Element>(selector: string): T[] =>
+      Array.from(sky.querySelectorAll<T>(selector));
+    const randomBetween = (min: number, max: number) =>
+      min + Math.random() * (max - min);
+
+    const randomizeStars = () => {
+      getAll<SVGRectElement>(".sky__star-twinkle rect").forEach((star) => {
+        const layer = star.closest(".sky__star-layer");
+        const maxSize = layer?.classList.contains("sky__star-layer--near")
+          ? 2.4
+          : layer?.classList.contains("sky__star-layer--mid")
+            ? 1.8
+            : 1.2;
+
+        star.setAttribute("x", String(Math.round(Math.random() * 1600)));
+        star.setAttribute("y", String(Math.round(Math.random() * 1000)));
+        star.setAttribute(
+          "width",
+          String(Number(randomBetween(0.8, maxSize + 0.8).toFixed(1))),
+        );
+        star.setAttribute("height", star.getAttribute("width") ?? "1");
+        star.setAttribute(
+          "opacity",
+          String(Number(randomBetween(0.3, 0.95).toFixed(2))),
+        );
+      });
+    };
+
+    randomizeStars();
+
+    window.addEventListener("ivdevs:themechange", (event) => {
+      const detail = (event as CustomEvent<{ theme: "dark" | "light" }>).detail;
+
+      // A new night gets a new sky while the stars are still hidden.
+      if (detail.theme === "dark") randomizeStars();
+    });
+
+    // Scroll and pointer parallax stay independent from theme transitions.
+    let pointerX = 0;
+    let pointerY = 0;
+    let frame = 0;
+
+    const render = () => {
+      frame = 0;
+      const scroll = Math.min(window.scrollY, 6000);
+      sky.style.setProperty("--sky-scroll", `${scroll}px`);
+      sky.style.setProperty("--sky-pointer-x", `${pointerX * 22}px`);
+      sky.style.setProperty("--sky-pointer-y", `${pointerY * 14}px`);
+    };
+
+    const schedule = () => {
+      if (!frame && !reducedMotion.matches) {
+        frame = window.requestAnimationFrame(render);
+      }
+    };
+
+    const resetParallax = () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      frame = 0;
+      pointerX = 0;
+      pointerY = 0;
+      sky.style.setProperty("--sky-scroll", "0px");
+      sky.style.setProperty("--sky-pointer-x", "0px");
+      sky.style.setProperty("--sky-pointer-y", "0px");
+    };
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    window.addEventListener(
+      "pointermove",
+      (event) => {
+        if (!precisePointer.matches || reducedMotion.matches) return;
+        pointerX = event.clientX / window.innerWidth - 0.5;
+        pointerY = event.clientY / window.innerHeight - 0.5;
+        schedule();
+      },
+      { passive: true },
+    );
+    document.documentElement.addEventListener("pointerleave", () => {
+      pointerX = 0;
+      pointerY = 0;
+      schedule();
+    });
+    reducedMotion.addEventListener("change", () => {
+      if (reducedMotion.matches) {
+        resetParallax();
+      } else {
+        schedule();
+      }
+    });
+
+    schedule();
+  }
+</script>

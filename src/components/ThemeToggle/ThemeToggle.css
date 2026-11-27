@@ -107,6 +107,8 @@
 /* ---------- Thumb ---------- */
 
 .theme-toggle__thumb {
+  view-transition-name: theme-toggle-thumb;
+
   position: absolute;
   bottom: var(--toggle-pad);
   left: var(--toggle-pad);

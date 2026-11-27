@@ -1,5 +1,6 @@
 ---
 import { Font } from "astro:assets";
+import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 import Sky from "../components/Sky/Sky.astro";
 import "../i18n/astro";
@@ -51,6 +52,7 @@ const ogLocaleAlternate = lang === "es" ? "en_US" : "es_CL";
     <meta name="description" content={description} />
     <meta name="theme-color" content="#08060f" />
     <meta name="color-scheme" content="dark light" />
+    <ClientRouter />
     <script is:inline>
       (() => {
         const STORAGE_KEY = "ivdevs-theme";
@@ -111,7 +113,9 @@ const ogLocaleAlternate = lang === "es" ? "en_US" : "es_CL";
       {t("a11y.skipToContent")}
     </a>
 
-    <Sky />
+    <div transition:persist class="contents">
+      <Sky />
+    </div>
 
     <div class="relative z-10 flex min-h-screen flex-col">
       <slot />

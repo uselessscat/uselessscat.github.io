@@ -1,7 +1,12 @@
 ---
-import { getNavLinks } from "../../data/site";
-import { defaultLang, type Lang } from "../../i18n/ui";
-import { getLocalePath, toLang, useTranslations } from "../../i18n/utils";
+import {
+  getHomeHref,
+  getNavLinks,
+  isNavLinkActive,
+  type NavLink,
+} from "../../data/nav";
+import type { Lang } from "../../i18n/ui";
+import { toLang, useTranslations } from "../../i18n/utils";
 import LangPicker from "../LangPicker/LangPicker.astro";
 import ThemeToggle from "../ThemeToggle/ThemeToggle.astro";
 import "./Nav.css";
@@ -19,58 +24,45 @@ const lang: Lang = langProp ?? toLang(Astro.currentLocale);
 
 const t = useTranslations(lang);
 const navLinks = getNavLinks(lang);
-const homeHref = getLocalePath(lang, "/#inicio");
-
+const homeHref = getHomeHref(lang);
 const currentPathname = currentPathProp ?? Astro.url?.pathname ?? "/";
 
-const currentPath =
-  (currentPathProp ?? Astro.url?.pathname ?? "/").replace(/\/$/, "") || "/";
-
-// In English the home lives at `/en`; in Spanish, at `/`.
-const homePath = lang === defaultLang ? "/" : `/${lang}`;
-
-const isActive = (href: string) => {
-  const path = href.split("#")[0].replace(/\/$/, "") || "/";
-  if (path === homePath) {
-    // Only the home is marked active, not links to its anchors.
-    return currentPath === homePath && href === homeHref;
-  }
-  return path === currentPath;
-};
+const isActive = (link: NavLink) =>
+  isNavLinkActive(link, currentPathname, lang);
 ---
 
 <header class="iv-nav sticky top-0 z-40">
   <div class="border-b border-line bg-night-950/70 backdrop-blur-md">
     <nav
-      class="relative mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 lg:justify-center"
+      class="mx-auto grid max-w-7xl grid-cols-[1fr_auto] items-center gap-x-0 px-5 py-3.5 min-[360px]:gap-x-2 lg:grid-cols-[1fr_auto_1fr] lg:gap-x-6"
       aria-label={t("nav.label")}
     >
       <a
         href={homeHref}
-        class="font-display text-sm tracking-wide text-cream lg:hidden"
+        class="nav-brand justify-self-start font-arcade text-[0.5rem] text-cream min-[360px]:text-[0.6875rem] sm:text-sm lg:text-base xl:text-lg"
         aria-label={t("nav.homeAria")}
       >
-        &lt;IV&nbsp;DEVS/&gt;
+        &lt;<span class="text-ember-500">IV</span>&nbsp;DEVS/&gt;
       </a>
 
-      <ul class="hidden items-center gap-8 lg:flex lg:gap-11">
+      <ul class="hidden items-center justify-center gap-8 lg:flex lg:gap-6 lg:text-sm xl:gap-11 xl:text-base">
         {navLinks.map((link) => (
           <li>
             <a
               href={link.href}
               class:list={[
-                "nav-link text-base text-cream/80 transition-colors hover:text-gold-text-strong",
-                isActive(link.href) && "text-gold-text-strong",
+                "nav-link text-base text-cream/80 transition-colors hover:text-gold-text-strong lg:text-sm xl:text-base",
+                isActive(link) && "text-gold-text-strong",
               ]}
-              aria-current={isActive(link.href) ? "page" : undefined}
+              aria-current={isActive(link) ? "page" : undefined}
             >
-              {`/ ${link.label} `}
+              {`/ ${link.label}`}
             </a>
           </li>
         ))}
       </ul>
 
-      <div class="ml-auto flex items-center gap-2 lg:absolute lg:right-5 lg:top-1/2 lg:ml-0 lg:-translate-y-1/2">
+      <div class="flex items-center justify-end gap-1 justify-self-end min-[360px]:gap-2">
         <LangPicker lang={lang} currentPathname={currentPathname} />
         <ThemeToggle lang={lang} />
 
@@ -116,11 +108,18 @@ const isActive = (href: string) => {
 </header>
 
 <script>
-  const toggle =
-    document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
-  const menu = document.querySelector<HTMLElement>("[data-menu]");
+  let navAbort: AbortController | undefined;
 
-  if (toggle && menu) {
+  const initNav = () => {
+    navAbort?.abort();
+    navAbort = new AbortController();
+    const { signal } = navAbort;
+
+    const toggle =
+      document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+    const menu = document.querySelector<HTMLElement>("[data-menu]");
+    if (!toggle || !menu) return;
+
     const label = toggle.querySelector(".sr-only");
 
     const setOpen = (open: boolean) => {
@@ -135,21 +134,40 @@ const isActive = (href: string) => {
       }
     };
 
-    toggle.addEventListener("click", () => {
-      setOpen(toggle.getAttribute("aria-expanded") !== "true");
-    });
+    toggle.addEventListener(
+      "click",
+      () => {
+        setOpen(toggle.getAttribute("aria-expanded") !== "true");
+      },
+      { signal },
+    );
 
-    menu.addEventListener("click", (event) => {
-      if (event.target instanceof Element && event.target.closest("a"))
-        setOpen(false);
-    });
+    menu.addEventListener(
+      "click",
+      (event) => {
+        if (event.target instanceof Element && event.target.closest("a"))
+          setOpen(false);
+      },
+      { signal },
+    );
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") setOpen(false);
-    });
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Escape") setOpen(false);
+      },
+      { signal },
+    );
 
-    window.addEventListener("resize", () => {
-      if (window.matchMedia("(min-width: 1024px)").matches) setOpen(false);
-    });
-  }
+    window.addEventListener(
+      "resize",
+      () => {
+        if (window.matchMedia("(min-width: 1024px)").matches) setOpen(false);
+      },
+      { signal },
+    );
+  };
+
+  initNav();
+  document.addEventListener("astro:page-load", initNav);
 </script>

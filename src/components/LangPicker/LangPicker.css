@@ -56,6 +56,8 @@
 /* ---------- Thumb ---------- */
 
 .lang-picker__thumb {
+  view-transition-name: lang-picker-thumb;
+
   position: absolute;
   top: var(--lang-pad);
   bottom: var(--lang-pad);
@@ -84,15 +86,6 @@
 }
 
 .lang-picker[data-current-lang="en"] .lang-picker__thumb {
-  transform: translateX(100%);
-}
-
-/* On click, move the thumb before navigating to the other locale. */
-.lang-picker[data-switching="es"] .lang-picker__thumb {
-  transform: translateX(0);
-}
-
-.lang-picker[data-switching="en"] .lang-picker__thumb {
   transform: translateX(100%);
 }
 

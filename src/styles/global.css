@@ -1,5 +1,60 @@
 @import "tailwindcss";
 
+/*
+ * Theme changes use a circular View Transition reveal. The old theme stays
+ * intact underneath, avoiding the low-contrast midpoint of a color cross-fade.
+ */
+html.theme-view-transition * {
+  transition: none !important;
+}
+
+/* Keep Astro's route scopes out of theme captures; otherwise `main` slides. */
+html.theme-view-transition [data-astro-transition-scope] {
+  view-transition-name: none !important;
+}
+
+html.theme-view-transition::view-transition-image-pair(root) {
+  isolation: auto;
+}
+
+html.theme-view-transition::view-transition-old(root),
+html.theme-view-transition::view-transition-new(root) {
+  display: block;
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+html.theme-view-transition::view-transition-old(root) {
+  z-index: 0;
+}
+
+html.theme-view-transition::view-transition-new(root) {
+  z-index: 1;
+}
+
+/* Slide the toggle thumb itself instead of baking it into the root snapshot. */
+::view-transition-group(theme-toggle-thumb) {
+  animation-duration: 500ms;
+  animation-timing-function: cubic-bezier(0.81, -0.04, 0.38, 1.5);
+}
+
+::view-transition-old(theme-toggle-thumb),
+::view-transition-new(theme-toggle-thumb) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-group(lang-picker-thumb) {
+  animation-duration: 350ms;
+  animation-timing-function: cubic-bezier(0.81, -0.04, 0.38, 1.5);
+}
+
+::view-transition-old(lang-picker-thumb),
+::view-transition-new(lang-picker-thumb) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 @custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
@@ -40,7 +95,7 @@
   --color-gold-surface: #e8c468;
   --color-link: #ff9f78;
   --color-sheen: rgb(255 255 255 / 0.025);
-  --color-panel: color-mix(in srgb, #0d0a17 92%, transparent);
+  --color-panel: rgb(13 10 23 / 0.92);
   --color-focus: #f2d36b;
   --color-stat-shadow: #08060f;
   --color-stat-glow: rgb(242 211 107 / 0.14);
@@ -51,8 +106,9 @@
 
   --shadow-pixel: 4px 4px 0 0 rgb(3 2 8 / 0.7);
 
-  /* Fade duration for theme changes */
-  --theme-transition-duration: 300ms;
+  /* Short, responsive theme feedback and a slightly slower sky cross-fade. */
+  --theme-transition-duration: 450ms;
+  --sky-transition-duration: 700ms;
 }
 
 /* ---------- Light theme: Daytime Valley ---------- */
@@ -145,7 +201,7 @@
   --color-gold-surface: #e8c468;
   --color-link: #ff9f78;
   --color-sheen: rgb(255 255 255 / 0.025);
-  --color-panel: color-mix(in srgb, #0d0a17 92%, transparent);
+  --color-panel: rgb(13 10 23 / 0.92);
   --color-focus: #f2d36b;
   --color-stat-shadow: #08060f;
   --color-stat-glow: rgb(242 211 107 / 0.14);
@@ -345,21 +401,19 @@
     transform: translateY(0);
   }
 
-  /* Hero glow: intense at night, faint haze by day. */
+  /* Keep the gradient stable and animate its opacity: gradients do not interpolate. */
   .hero-glow {
+    opacity: 1;
     background: radial-gradient(
       closest-side,
       rgb(229 113 76 / 0.13),
       transparent
     );
+    transition: opacity var(--theme-transition-duration) ease-in-out;
   }
 
   [data-theme="light"] .hero-glow {
-    background: radial-gradient(
-      closest-side,
-      rgb(196 85 45 / 0.06),
-      transparent
-    );
+    opacity: 0.45;
   }
 }
 
@@ -445,19 +499,6 @@
     color: var(--color-ember-400);
     font-size: 0.65em;
   }
-}
-
-/* ---------- Transición de tema ---------- */
-
-html.theme-transition,
-html.theme-transition *,
-html.theme-transition *::before,
-html.theme-transition *::after {
-  transition-property:
-    color, background-color, border-color, outline-color, text-decoration-color,
-    fill, stroke, box-shadow, transform, scale, opacity;
-  transition-duration: var(--theme-transition-duration);
-  transition-timing-function: ease-in-out;
 }
 
 /* ---------- Animations ---------- */

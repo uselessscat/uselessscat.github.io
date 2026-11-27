@@ -55,13 +55,13 @@ const switchToDark = t("themeToggle.switchToDark");
   if (root.dataset.themeReady !== "true") {
     root.dataset.themeReady = "true";
 
-    const buttons = Array.from(
-      document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]"),
-    );
+    const getButtons = () =>
+      Array.from(
+        document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]"),
+      );
     const colorSchemeQuery = window.matchMedia("(prefers-color-scheme: light)");
-    const themeColor = document.querySelector<HTMLMetaElement>(
-      'meta[name="theme-color"]',
-    );
+    const getThemeColor = () =>
+      document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
 
     const storedTheme = (): "dark" | "light" | null => {
       try {
@@ -85,7 +85,7 @@ const switchToDark = t("themeToggle.switchToDark");
     };
 
     const labels = (theme: "dark" | "light") => {
-      buttons.forEach((button) => {
+      getButtons().forEach((button) => {
         const text = labelFor(button, theme);
         if (text) {
           button.setAttribute("aria-label", text);
@@ -103,12 +103,10 @@ const switchToDark = t("themeToggle.switchToDark");
       root.dataset.theme = theme;
       root.style.colorScheme = theme;
 
-      if (themeColor) {
-        themeColor.setAttribute(
-          "content",
-          theme === "light" ? "#F7F5F0" : "#08060f",
-        );
-      }
+      getThemeColor()?.setAttribute(
+        "content",
+        theme === "light" ? "#F7F5F0" : "#08060f",
+      );
 
       labels(theme);
 
@@ -123,49 +121,127 @@ const switchToDark = t("themeToggle.switchToDark");
 
     apply(currentTheme(), false);
 
-    // Fade every themed color across the page on theme changes.
-    const transitionMs = (): number => {
-      const raw = window
-        .getComputedStyle(root)
-        .getPropertyValue("--theme-transition-duration")
-        .trim();
-      const value = Number.parseFloat(raw);
-      if (!Number.isFinite(value)) return 300;
-      if (raw.endsWith("ms")) return value;
-      if (raw.endsWith("s")) return value * 1000;
-      return value;
+    let viewTransitionVersion = 0;
+    let pendingTheme: { theme: "dark" | "light"; persist: boolean } | undefined;
+
+    const announceTheme = (theme: "dark" | "light", animate: boolean) => {
+      window.dispatchEvent(
+        new CustomEvent("ivdevs:themechange", {
+          detail: { theme, animate },
+        }),
+      );
     };
 
-    let transitionTimer: number | undefined;
-
     const applyAnimated = (theme: "dark" | "light", persist: boolean) => {
+      // Android Edge can crash when full-page captures are restarted too quickly.
+      // Keep only the latest request and run it after the active reveal finishes.
+      if (document.activeViewTransition) {
+        pendingTheme = { theme, persist };
+        return;
+      }
+
       const reduceMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
-      if (reduceMotion) {
+      if (reduceMotion || typeof document.startViewTransition !== "function") {
         apply(theme, persist);
+        announceTheme(theme, false);
         return;
       }
 
-      const duration = transitionMs();
+      const button = getButtons()[0];
+      const rect = button.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      const radius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y),
+      );
+      const version = ++viewTransitionVersion;
 
-      root.classList.add("theme-transition");
-      // Resolve styles with the transition already active so the fade
-      // starts from the current colors instead of mid-way.
-      void root.offsetWidth;
-      apply(theme, persist);
+      root.classList.add("theme-view-transition");
 
-      window.clearTimeout(transitionTimer);
-      transitionTimer = window.setTimeout(() => {
-        root.classList.remove("theme-transition");
-      }, duration + 100);
+      try {
+        const transition = document.startViewTransition(() => {
+          apply(theme, persist);
+          announceTheme(theme, true);
+        });
+
+        void transition.ready
+          .then(() => {
+            document.documentElement.animate(
+              {
+                clipPath: [
+                  `circle(0px at ${x}px ${y}px)`,
+                  `circle(${radius}px at ${x}px ${y}px)`,
+                ],
+              },
+              {
+                duration: 500,
+                easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+                pseudoElement: "::view-transition-new(root)",
+              },
+            );
+          })
+          .catch(() => {
+            // The capture can be skipped before its pseudo-elements exist.
+          });
+
+        void transition.finished.finally(() => {
+          if (version !== viewTransitionVersion) return;
+
+          root.classList.remove("theme-view-transition");
+          if (pendingTheme) window.requestAnimationFrame(flushPendingTheme);
+        });
+        return;
+      } catch {
+        root.classList.remove("theme-view-transition");
+        apply(theme, persist);
+        announceTheme(theme, false);
+      }
     };
 
-    buttons.forEach((button) => {
-      button.addEventListener("click", () => {
-        applyAnimated(currentTheme() === "light" ? "dark" : "light", true);
+    const flushPendingTheme = () => {
+      if (document.activeViewTransition) {
+        window.requestAnimationFrame(flushPendingTheme);
+        return;
+      }
+
+      const next = pendingTheme;
+      pendingTheme = undefined;
+      if (next && next.theme !== currentTheme()) {
+        applyAnimated(next.theme, next.persist);
+      }
+    };
+
+    const bindButtons = () => {
+      getButtons().forEach((button) => {
+        if (button.dataset.themeToggleBound === "true") return;
+        button.dataset.themeToggleBound = "true";
+        button.addEventListener("click", () => {
+          applyAnimated(currentTheme() === "light" ? "dark" : "light", true);
+        });
       });
+    };
+
+    bindButtons();
+    document.addEventListener("astro:page-load", () => {
+      apply(currentTheme(), false);
+      bindButtons();
+    });
+
+    // ClientRouter replaces the root attributes with the server-rendered ones,
+    // which always say "dark". Carry the active theme over before the swap.
+    document.addEventListener("astro:before-swap", (event) => {
+      const { newDocument } = event as Event & { newDocument: Document };
+      const theme = currentTheme();
+
+      newDocument.documentElement.dataset.theme = theme;
+      newDocument.documentElement.style.colorScheme = theme;
+      newDocument
+        .querySelector<HTMLMetaElement>('meta[name="theme-color"]')
+        ?.setAttribute("content", theme === "light" ? "#F7F5F0" : "#08060f");
     });
 
     // Only follow the system if the user has not chosen manually yet.

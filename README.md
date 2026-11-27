@@ -42,8 +42,8 @@ Site content lives in `src/data/site.ts`; data that depends on the language is r
 - Palette, semantic tokens and light-theme overrides: `src/styles/global.css`.
 - Fonts: `astro.config.mjs` (`fonts`), used by the `font-*` utilities in `global.css`.
 - Pixel frame and its variants: `src/components/Card/`.
-- Night/day sky background: `src/components/Sky/Sky.css`.
-- Theme switch: `src/components/ThemeToggle/`.
+- Night/day sky: `src/components/Sky/`. Supported browsers use a native circular View Transition from the toggle; unsupported browsers and reduced-motion users switch instantly.
+- Theme switch and synchronized color/shadow transitions.
 - Panels that must stay dark in both themes use the reusable `.theme-dark` scope.
 
 The theme is driven by `data-theme="dark|light"`. In Storybook, use the **Theme** toolbar to preview both, or append `&globals=theme:light` to a story URL.
