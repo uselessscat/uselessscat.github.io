@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="#e5714c" aria-label="IV">
+  <title>IV</title>
+  <g transform="translate(8 36) scale(0.064 -0.064) translate(-125 -1000)">
+    <path d="M125 125V250H375V875H125V1000H875V875H625V250H875V125Z" />
+    <path d="M1375 125V250H1250V375H1125V500H1000V1000H1250V625H1375V500H1500V625H1625V1000H1875V500H1750V375H1625V250H1500V125Z" />
+  </g>
+</svg>
